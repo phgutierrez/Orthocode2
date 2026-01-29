@@ -27,6 +27,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let isMounted = true;
 
+    const syncProfile = async (session: Session) => {
+      try {
+        const name = session.user.user_metadata?.name || '';
+        const email = session.user.email || '';
+
+        const { data: profile, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+
+        if (!error && profile && isMounted) {
+          setUser({
+            id: profile.id,
+            email: profile.email,
+            name: profile.name,
+          });
+        } else if (error?.code === 'PGRST116' && isMounted) {
+          await supabase
+            .from('users')
+            .insert({
+              id: session.user.id,
+              email,
+              name,
+            });
+        }
+      } catch (error) {
+        console.error('Error syncing profile:', error);
+      }
+    };
+
     const handleSession = async (session: Session | null) => {
       try {
         if (!isMounted) return;
@@ -41,40 +72,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               email,
               name,
             });
+            setLoading(false);
           }
 
-          const { data: profile, error } = await supabase
-            .from('users')
-            .select('*')
-            .eq('id', session.user.id)
-            .single();
-
-          if (!error && profile && isMounted) {
-            setUser({
-              id: profile.id,
-              email: profile.email,
-              name: profile.name,
-            });
-          } else if (error?.code === 'PGRST116' && isMounted) {
-            await supabase
-              .from('users')
-              .insert({
-                id: session.user.id,
-                email,
-                name,
-              });
-          }
+          void syncProfile(session);
         } else {
           if (isMounted) {
             setUser(null);
+            setLoading(false);
           }
         }
       } catch (error) {
         console.error('Error handling session:', error);
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
       }
     };
 
