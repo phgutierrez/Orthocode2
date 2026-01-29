@@ -15,6 +15,9 @@ export default function Favorites() {
   const { procedures, loading } = useProcedures();
 
   const favoriteProcedures = useMemo(() => {
+    if (!Array.isArray(favorites) || !Array.isArray(procedures)) {
+      return [];
+    }
     return favorites
       .map(id => procedures.find(p => p.id === id))
       .filter(Boolean) as Procedure[];

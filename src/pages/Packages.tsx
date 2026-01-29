@@ -24,6 +24,9 @@ export default function Packages() {
   const [selectedProcedures, setSelectedProcedures] = useState<string[]>([]);
 
   const favoriteProcedures = useMemo(() => {
+    if (!Array.isArray(favorites) || !Array.isArray(procedures)) {
+      return [];
+    }
     return favorites
       .map(id => procedures.find(p => p.id === id))
       .filter(Boolean) as typeof procedures;

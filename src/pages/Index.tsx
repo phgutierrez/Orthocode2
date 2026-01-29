@@ -24,6 +24,9 @@ export default function Index() {
     if (!searchQuery && !selectedRegion && !selectedType) {
       return [];
     }
+    if (!Array.isArray(procedures) || procedures.length === 0) {
+      return [];
+    }
     return searchProcedures(procedures, searchQuery, {
       region: selectedRegion,
       type: selectedType,
@@ -31,6 +34,9 @@ export default function Index() {
   }, [procedures, searchQuery, selectedRegion, selectedType]);
 
   const recentFavorites = useMemo(() => {
+    if (!Array.isArray(favorites) || !Array.isArray(procedures)) {
+      return [];
+    }
     return favorites
       .slice(0, 3)
       .map(id => procedures.find(p => p.id === id))
