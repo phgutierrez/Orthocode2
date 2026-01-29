@@ -12,18 +12,18 @@ export async function loadProcedures(): Promise<Procedure[]> {
   return cachedProcedures;
 }
 
-export function searchProcedures(procedures: Procedure[], query: string, filters?: { region?: string; type?: string }) {
+export function searchProcedures(procedures: Procedure[], query: string = '', filters?: { region?: string; type?: string }) {
   let results = procedures;
 
-  if (query.trim()) {
+  if (query && query.trim()) {
     const q = query.toLowerCase();
     results = results.filter((proc) => {
       return (
-        proc.name.toLowerCase().includes(q) ||
-        proc.codes.tuss.toLowerCase().includes(q) ||
-        proc.codes.cbhpm.toLowerCase().includes(q) ||
-        proc.codes.sus.toLowerCase().includes(q) ||
-        proc.keywords.some((kw) => kw.toLowerCase().includes(q))
+        proc.name?.toLowerCase().includes(q) ||
+        proc.codes?.tuss?.toLowerCase().includes(q) ||
+        proc.codes?.cbhpm?.toLowerCase().includes(q) ||
+        proc.codes?.sus?.toLowerCase().includes(q) ||
+        proc.keywords?.some((kw) => kw?.toLowerCase().includes(q))
       );
     });
   }
