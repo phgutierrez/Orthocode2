@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { createClient, SupabaseClient, Session } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 export interface User {
   id: string;
@@ -39,6 +39,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { data: { session } } = await supabase.auth.getSession();
         
         if (session?.user) {
+          const name = session.user.user_metadata?.name || '';
+          const email = session.user.email || '';
+
           // Buscar perfil do usuário
           const { data: profile } = await supabase
             .from('users')
@@ -53,19 +56,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               name: profile.name,
             });
           } else {
-            // Se não existe perfil, criar um
+            // Se não existe perfil, criar/atualizar
             await supabase
               .from('users')
-              .insert({
+              .upsert({
                 id: session.user.id,
-                email: session.user.email,
-                name: session.user.user_metadata?.name || '',
+                email,
+                name,
               });
 
             setUser({
               id: session.user.id,
-              email: session.user.email,
-              name: session.user.user_metadata?.name || '',
+              email,
+              name,
             });
           }
         }
@@ -82,6 +85,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
         try {
+          const name = session.user.user_metadata?.name || '';
+          const email = session.user.email || '';
+
           const { data: profile } = await supabase
             .from('users')
             .select('*')
@@ -93,6 +99,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               id: profile.id,
               email: profile.email,
               name: profile.name,
+            });
+          } else {
+            await supabase
+              .from('users')
+              .upsert({
+                id: session.user.id,
+                email,
+                name,
+              });
+
+            setUser({
+              id: session.user.id,
+              email,
+              name,
             });
           }
         } catch (error) {
@@ -118,6 +138,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) throw error;
 
       if (data.user) {
+        const name = data.user.user_metadata?.name || '';
+        const email = data.user.email || '';
+
         // Buscar perfil do usuário
         const { data: profile } = await supabase
           .from('users')
@@ -130,6 +153,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             id: profile.id,
             email: profile.email,
             name: profile.name,
+          });
+        } else {
+          await supabase
+            .from('users')
+            .upsert({
+              id: data.user.id,
+              email,
+              name,
+            });
+
+          setUser({
+            id: data.user.id,
+            email,
+            name,
           });
         }
       }
