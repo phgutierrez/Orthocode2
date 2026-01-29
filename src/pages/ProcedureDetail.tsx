@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { BottomNav } from '@/components/BottomNav';
 import { getProcedureById } from '@/data/procedures';
 import { useFavorites } from '@/hooks/useFavorites';
+import { useProcedures } from '@/hooks/useProcedures';
 import { regionLabels, typeLabels } from '@/types/procedure';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -16,10 +17,19 @@ export default function ProcedureDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { procedures, loading } = useProcedures();
   const { toast } = useToast();
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
-  const procedure = id ? getProcedureById(id) : undefined;
+  const procedure = id && !loading ? getProcedureById(procedures, id) : undefined;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground">Carregando...</p>
+      </div>
+    );
+  }
 
   if (!procedure) {
     return (

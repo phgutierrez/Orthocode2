@@ -4,20 +4,29 @@ import { Logo } from '@/components/Logo';
 import { ProcedureCard } from '@/components/ProcedureCard';
 import { BottomNav } from '@/components/BottomNav';
 import { Button } from '@/components/ui/button';
-import { procedures } from '@/data/procedures';
 import { useFavorites } from '@/hooks/useFavorites';
+import { useProcedures } from '@/hooks/useProcedures';
 import { Procedure } from '@/types/procedure';
 import { useMemo } from 'react';
 
 export default function Favorites() {
   const navigate = useNavigate();
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
+  const { procedures, loading } = useProcedures();
 
   const favoriteProcedures = useMemo(() => {
     return favorites
       .map(id => procedures.find(p => p.id === id))
       .filter(Boolean) as Procedure[];
-  }, [favorites]);
+  }, [favorites, procedures]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground">Carregando...</p>
+      </div>
+    );
+  }
 
   const handleSelectProcedure = (procedure: Procedure) => {
     navigate(`/procedure/${procedure.id}`);

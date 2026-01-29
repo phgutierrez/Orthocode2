@@ -58,12 +58,30 @@ function mapRegion(capitulo) {
   return 'outros';
 }
 
-// Write to TypeScript file
-const output = `import { Procedure } from '@/types/procedure';
+// Write to JSON file for public folder
+const jsonOutput = JSON.stringify(procedures, null, 2);
+fs.writeFileSync(
+  path.join(__dirname, '../public/data/procedures.json'),
+  jsonOutput,
+  'utf-8'
+);
 
-export const procedures: Procedure[] = ${JSON.stringify(procedures, null, 2)};
+// Write minimal TypeScript file with only types and fetch logic
+const tsOutput = `import { Procedure } from '@/types/procedure';
 
-export function searchProcedures(query: string, filters?: { region?: string; type?: string }) {
+let cachedProcedures: Procedure[] | null = null;
+
+export async function loadProcedures(): Promise<Procedure[]> {
+  if (cachedProcedures) {
+    return cachedProcedures;
+  }
+  
+  const response = await fetch('/data/procedures.json');
+  cachedProcedures = await response.json();
+  return cachedProcedures;
+}
+
+export function searchProcedures(procedures: Procedure[], query: string, filters?: { region?: string; type?: string }) {
   let results = procedures;
 
   if (query.trim()) {
@@ -90,16 +108,17 @@ export function searchProcedures(query: string, filters?: { region?: string; typ
   return results;
 }
 
-export function getProcedureById(id: string): Procedure | undefined {
+export function getProcedureById(procedures: Procedure[], id: string): Procedure | undefined {
   return procedures.find((proc) => proc.id === id);
 }
 `;
 
 fs.writeFileSync(
   path.join(__dirname, '../src/data/procedures.ts'),
-  output,
+  tsOutput,
   'utf-8'
 );
 
 console.log(`✓ Converted ${procedures.length} procedures from TUSS Excel file`);
-console.log('✓ Saved to src/data/procedures.ts');
+console.log('✓ Saved JSON to public/data/procedures.json');
+console.log('✓ Saved TypeScript loader to src/data/procedures.ts');

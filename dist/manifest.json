@@ -1,0 +1,26 @@
+{
+  "name": "OrthoCode - Códigos de Ortopedia",
+  "short_name": "OrthoCode",
+  "description": "Busque e visualize códigos de procedimentos ortopédicos CBHPM, TUSS e SUS",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F0F9FF",
+  "theme_color": "#1E40AF",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["medical", "health", "utilities"],
+  "lang": "pt-BR"
+}

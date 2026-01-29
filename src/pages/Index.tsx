@@ -7,13 +7,15 @@ import { ProcedureCard } from '@/components/ProcedureCard';
 import { FilterChips } from '@/components/FilterChips';
 import { BottomNav } from '@/components/BottomNav';
 import { Button } from '@/components/ui/button';
-import { searchProcedures, procedures } from '@/data/procedures';
+import { searchProcedures } from '@/data/procedures';
 import { useFavorites } from '@/hooks/useFavorites';
+import { useProcedures } from '@/hooks/useProcedures';
 import { Procedure, AnatomicRegion, ProcedureType } from '@/types/procedure';
 
 export default function Index() {
   const navigate = useNavigate();
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
+  const { procedures, loading } = useProcedures();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRegion, setSelectedRegion] = useState<AnatomicRegion>();
   const [selectedType, setSelectedType] = useState<ProcedureType>();
@@ -22,18 +24,26 @@ export default function Index() {
     if (!searchQuery && !selectedRegion && !selectedType) {
       return [];
     }
-    return searchProcedures(searchQuery, {
+    return searchProcedures(procedures, searchQuery, {
       region: selectedRegion,
       type: selectedType,
     });
-  }, [searchQuery, selectedRegion, selectedType]);
+  }, [procedures, searchQuery, selectedRegion, selectedType]);
 
   const recentFavorites = useMemo(() => {
     return favorites
       .slice(0, 3)
       .map(id => procedures.find(p => p.id === id))
       .filter(Boolean) as Procedure[];
-  }, [favorites]);
+  }, [favorites, procedures]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground">Carregando procedimentos...</p>
+      </div>
+    );
+  }
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);

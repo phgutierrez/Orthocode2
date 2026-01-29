@@ -7,18 +7,27 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { procedures } from '@/data/procedures';
 import { usePackages } from '@/hooks/usePackages';
+import { useProcedures } from '@/hooks/useProcedures';
 import { toast } from '@/components/ui/use-toast';
 import { regionLabels, typeLabels } from '@/types/procedure';
 
 export default function Packages() {
   const { packages, addPackage, updatePackage, deletePackage } = usePackages();
+  const { procedures, loading } = useProcedures();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [query, setQuery] = useState('');
   const [selectedProcedures, setSelectedProcedures] = useState<string[]>([]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground">Carregando...</p>
+      </div>
+    );
+  }
 
   const filteredProcedures = useMemo(() => {
     if (!query.trim()) return procedures;
