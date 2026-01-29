@@ -21,14 +21,6 @@ export default function Packages() {
   const [query, setQuery] = useState('');
   const [selectedProcedures, setSelectedProcedures] = useState<string[]>([]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground">Carregando...</p>
-      </div>
-    );
-  }
-
   const filteredProcedures = useMemo(() => {
     if (!query.trim()) return procedures;
     const q = query.toLowerCase();
@@ -41,7 +33,15 @@ export default function Packages() {
         procedure.keywords.some(keyword => keyword.toLowerCase().includes(q))
       );
     });
-  }, [query]);
+  }, [query, procedures]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground">Carregando...</p>
+      </div>
+    );
+  }
 
   const resetForm = () => {
     setEditingId(null);
