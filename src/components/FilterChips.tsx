@@ -9,7 +9,17 @@ interface FilterChipsProps {
   onTypeChange: (type?: ProcedureType) => void;
 }
 
-const regions: AnatomicRegion[] = ['coluna', 'membros_superiores', 'membros_inferiores', 'pelve', 'mao', 'pe', 'joelho', 'ombro', 'quadril'];
+const regions: AnatomicRegion[] = [
+  'coluna',
+  'ombro',
+  'cotovelo',
+  'mao-punho',
+  'quadril',
+  'joelho',
+  'tornozelo-pe',
+  'membros-inferiores',
+  'membros-superiores',
+];
 const types: ProcedureType[] = ['cirurgico', 'ambulatorial', 'diagnostico'];
 
 export function FilterChips({ selectedRegion, selectedType, onRegionChange, onTypeChange }: FilterChipsProps) {
