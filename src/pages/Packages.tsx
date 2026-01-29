@@ -9,22 +9,30 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { usePackages } from '@/hooks/usePackages';
 import { useProcedures } from '@/hooks/useProcedures';
+import { useFavorites } from '@/hooks/useFavorites';
 import { toast } from '@/components/ui/use-toast';
 import { regionLabels, typeLabels } from '@/types/procedure';
 
 export default function Packages() {
   const { packages, addPackage, updatePackage, deletePackage } = usePackages();
   const { procedures, loading } = useProcedures();
+  const { favorites } = useFavorites();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [query, setQuery] = useState('');
   const [selectedProcedures, setSelectedProcedures] = useState<string[]>([]);
 
+  const favoriteProcedures = useMemo(() => {
+    return favorites
+      .map(id => procedures.find(p => p.id === id))
+      .filter(Boolean) as typeof procedures;
+  }, [favorites, procedures]);
+
   const filteredProcedures = useMemo(() => {
-    if (!query.trim()) return procedures;
+    if (!query.trim()) return favoriteProcedures;
     const q = query.toLowerCase();
-    return procedures.filter((procedure) => {
+    return favoriteProcedures.filter((procedure) => {
       return (
         procedure.name.toLowerCase().includes(q) ||
         procedure.codes.tuss.toLowerCase().includes(q) ||
@@ -33,7 +41,7 @@ export default function Packages() {
         procedure.keywords.some(keyword => keyword.toLowerCase().includes(q))
       );
     });
-  }, [query, procedures]);
+  }, [query, favoriteProcedures]);
 
   if (loading) {
     return (
@@ -174,20 +182,26 @@ export default function Packages() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">Adicionar procedimentos</label>
+                <label className="text-sm font-medium text-foreground">Adicionar procedimentos dos favoritos</label>
                 <div className="relative">
                   <Search className="h-4 w-4 text-muted-foreground absolute left-3 top-3" />
                   <Input
                     className="pl-9"
-                    placeholder="Buscar procedimento ou código"
+                    placeholder="Buscar nos favoritos"
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
                   />
                 </div>
+                {favoriteProcedures.length === 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    Nenhum favorito ainda. Adicione procedimentos aos favoritos para criar pacotes.
+                  </p>
+                )}
               </div>
 
-              <div className="grid gap-3 max-h-72 overflow-y-auto pr-1">
-                {filteredProcedures.map((procedure) => {
+              {favoriteProcedures.length > 0 && (
+                <div className="grid gap-3 max-h-72 overflow-y-auto pr-1">
+                  {filteredProcedures.map((procedure) => {
                   const selected = selectedProcedures.includes(procedure.id);
                   return (
                     <button
@@ -219,9 +233,10 @@ export default function Packages() {
                   );
                 })}
               </div>
+              )}
 
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button className="gap-2" onClick={handleSubmit}>
+                <Button className="gap-2" onClick={handleSubmit} disabled={favoriteProcedures.length === 0}>
                   <Plus className="h-4 w-4" />
                   {editingId ? 'Salvar alterações' : 'Criar pacote'}
                 </Button>
