@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 
 export interface User {
   id: string;
@@ -17,15 +17,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Inicializar cliente Supabase
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Supabase credentials not found in environment variables');
-}
-
-const supabase: SupabaseClient = createClient(supabaseUrl || '', supabaseAnonKey || '');
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
