@@ -24,16 +24,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Carregar usuário ao montar e escutar mudanças de sessão
   useEffect(() => {
-    const initAuth = async () => {
-      try {
-        // Verificar sessão existente
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (session?.user) {
+    let isMounted = true;
+
+    // Escutar mudanças de autenticação
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!isMounted) return;
+
+      if (session?.user) {
+        try {
           const name = session.user.user_metadata?.name || '';
           const email = session.user.email || '';
 
-          // Definir usuário imediatamente para evitar tela de login
+          // Definir usuário imediatamente
           setUser({
             id: session.user.id,
             email,
@@ -48,58 +50,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             .single();
 
           if (profile) {
-            setUser({
-              id: profile.id,
-              email: profile.email,
-              name: profile.name,
-            });
+            if (isMounted) {
+              setUser({
+                id: profile.id,
+                email: profile.email,
+                name: profile.name,
+              });
+            }
           } else {
             // Se não existe perfil, criar/atualizar
-            await supabase
-              .from('users')
-              .upsert({
-                id: session.user.id,
-                email,
-                name,
-              });
-          }
-        }
-      } catch (error) {
-        console.error('Error initializing auth:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initAuth();
-
-    // Escutar mudanças de autenticação
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user) {
-        try {
-          const name = session.user.user_metadata?.name || '';
-          const email = session.user.email || '';
-
-          // Definir usuário imediatamente
-          setUser({
-            id: session.user.id,
-            email,
-            name,
-          });
-
-          const { data: profile } = await supabase
-            .from('users')
-            .select('*')
-            .eq('id', session.user.id)
-            .single();
-
-          if (profile) {
-            setUser({
-              id: profile.id,
-              email: profile.email,
-              name: profile.name,
-            });
-          } else {
             await supabase
               .from('users')
               .upsert({
@@ -112,11 +71,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           console.error('Error updating user profile:', error);
         }
       } else {
-        setUser(null);
+        if (isMounted) {
+          setUser(null);
+        }
+      }
+
+      // Sempre finalizar loading após processar sessão
+      if (isMounted) {
+        setLoading(false);
       }
     });
 
     return () => {
+      isMounted = false;
       subscription?.unsubscribe();
     };
   }, []);
