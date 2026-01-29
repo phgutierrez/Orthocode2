@@ -1,41 +1,79 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/lib/supabase';
 
 export function useFavorites() {
-  const { user } = useAuth();
-  const FAVORITES_KEY = user ? `orthocode_favorites_${user.id}` : 'orthocode_favorites_guest';
-
+  const { user, loading: authLoading } = useAuth();
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  // Load favorites from localStorage on mount
+  // Carregar favoritos do Supabase ao montar
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(FAVORITES_KEY);
-      if (stored) {
-        setFavorites(JSON.parse(stored));
+    if (authLoading || !user?.id) return;
+
+    const fetchFavorites = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('favorites')
+          .select('procedure_code')
+          .eq('user_id', user.id);
+
+        if (error) {
+          console.error('Erro ao carregar favoritos:', error);
+          return;
+        }
+
+        setFavorites(data?.map(f => f.procedure_code) || []);
+      } catch (error) {
+        console.error('Erro ao carregar favoritos:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error loading favorites:', error);
-    }
-  }, [FAVORITES_KEY]);
+    };
 
-  // Save favorites to localStorage whenever they change
-  const saveFavorites = useCallback((newFavorites: string[]) => {
+    fetchFavorites();
+  }, [user?.id, authLoading]);
+
+  const addFavorite = useCallback(async (id: string) => {
+    if (!user?.id || favorites.includes(id)) return;
+
     try {
-      localStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavorites));
-      setFavorites(newFavorites);
+      const { error } = await supabase
+        .from('favorites')
+        .insert([{ user_id: user.id, procedure_code: id }]);
+
+      if (error) {
+        console.error('Erro ao adicionar favorito:', error);
+        return;
+      }
+
+      setFavorites(prev => [...new Set([...prev, id])]);
     } catch (error) {
-      console.error('Error saving favorites:', error);
+      console.error('Erro ao adicionar favorito:', error);
     }
-  }, [FAVORITES_KEY]);
+  }, [user?.id, favorites]);
 
-  const addFavorite = useCallback((id: string) => {
-    saveFavorites([...new Set([...favorites, id])]);
-  }, [favorites, saveFavorites]);
+  const removeFavorite = useCallback(async (id: string) => {
+    if (!user?.id) return;
 
-  const removeFavorite = useCallback((id: string) => {
-    saveFavorites(favorites.filter(fav => fav !== id));
-  }, [favorites, saveFavorites]);
+    try {
+      const { error } = await supabase
+        .from('favorites')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('procedure_code', id);
+
+      if (error) {
+        console.error('Erro ao remover favorito:', error);
+        return;
+      }
+
+      setFavorites(prev => prev.filter(fav => fav !== id));
+    } catch (error) {
+      console.error('Erro ao remover favorito:', error);
+    }
+  }, [user?.id]);
 
   const toggleFavorite = useCallback((id: string) => {
     if (favorites.includes(id)) {
@@ -55,5 +93,6 @@ export function useFavorites() {
     removeFavorite,
     toggleFavorite,
     isFavorite,
+    loading,
   };
 }

@@ -1,67 +1,194 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/lib/supabase';
 import type { ProcedurePackage } from '@/types/package';
 
-const generateId = () => {
-  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
-    return crypto.randomUUID();
-  }
-  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
-};
-
 export function usePackages() {
-  const { user } = useAuth();
-  const PACKAGES_KEY = user ? `orthocode_packages_${user.id}` : 'orthocode_packages_guest';
-
+  const { user, loading: authLoading } = useAuth();
   const [packages, setPackages] = useState<ProcedurePackage[]>([]);
+  const [loading, setLoading] = useState(false);
 
+  // Carregar pacotes do Supabase ao montar
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(PACKAGES_KEY);
-      if (stored) {
-        setPackages(JSON.parse(stored));
+    if (authLoading || !user?.id) return;
+
+    const fetchPackages = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('packages')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Erro ao carregar pacotes:', error);
+          return;
+        }
+
+        // Carregar procedimentos de cada pacote
+        const packagesWithProcedures = await Promise.all(
+          (data || []).map(async (pkg) => {
+            const { data: procedures, error: procError } = await supabase
+              .from('package_procedures')
+              .select('procedure_code')
+              .eq('package_id', pkg.id);
+
+            if (procError) {
+              console.error('Erro ao carregar procedimentos do pacote:', procError);
+              return {
+                id: pkg.id,
+                name: pkg.name,
+                procedureIds: [],
+                createdAt: pkg.created_at,
+                updatedAt: pkg.updated_at,
+              };
+            }
+
+            return {
+              id: pkg.id,
+              name: pkg.name,
+              procedureIds: procedures?.map(p => p.procedure_code) || [],
+              createdAt: pkg.created_at,
+              updatedAt: pkg.updated_at,
+            };
+          })
+        );
+
+        setPackages(packagesWithProcedures);
+      } catch (error) {
+        console.error('Erro ao carregar pacotes:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error loading packages:', error);
-    }
-  }, [PACKAGES_KEY]);
-
-  const persist = useCallback((nextPackages: ProcedurePackage[]) => {
-    try {
-      localStorage.setItem(PACKAGES_KEY, JSON.stringify(nextPackages));
-      setPackages(nextPackages);
-    } catch (error) {
-      console.error('Error saving packages:', error);
-    }
-  }, [PACKAGES_KEY]);
-
-  const addPackage = useCallback((data: Omit<ProcedurePackage, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const now = new Date().toISOString();
-    const newPackage: ProcedurePackage = {
-      id: generateId(),
-      createdAt: now,
-      updatedAt: now,
-      ...data,
     };
-    persist([newPackage, ...packages]);
-    return newPackage;
-  }, [packages, persist]);
 
-  const updatePackage = useCallback((id: string, data: Partial<Omit<ProcedurePackage, 'id' | 'createdAt'>>) => {
-    const next = packages.map((pkg) => {
-      if (pkg.id !== id) return pkg;
-      return {
-        ...pkg,
-        ...data,
-        updatedAt: new Date().toISOString(),
+    fetchPackages();
+  }, [user?.id, authLoading]);
+
+  const addPackage = useCallback(async (data: Omit<ProcedurePackage, 'id' | 'createdAt' | 'updatedAt'>) => {
+    if (!user?.id) return null;
+
+    try {
+      const { data: pkgData, error: pkgError } = await supabase
+        .from('packages')
+        .insert([{ user_id: user.id, name: data.name }])
+        .select()
+        .single();
+
+      if (pkgError) {
+        console.error('Erro ao criar pacote:', pkgError);
+        return null;
+      }
+
+      // Adicionar procedimentos
+      if (data.procedureIds && data.procedureIds.length > 0) {
+        const { error: procError } = await supabase
+          .from('package_procedures')
+          .insert(
+            data.procedureIds.map(code => ({
+              package_id: pkgData.id,
+              procedure_code: code,
+            }))
+          );
+
+        if (procError) {
+          console.error('Erro ao adicionar procedimentos ao pacote:', procError);
+        }
+      }
+
+      const newPackage: ProcedurePackage = {
+        id: pkgData.id,
+        name: pkgData.name,
+        procedureIds: data.procedureIds || [],
+        createdAt: pkgData.created_at,
+        updatedAt: pkgData.updated_at,
       };
-    });
-    persist(next);
-  }, [packages, persist]);
 
-  const deletePackage = useCallback((id: string) => {
-    persist(packages.filter(pkg => pkg.id !== id));
-  }, [packages, persist]);
+      setPackages(prev => [newPackage, ...prev]);
+      return newPackage;
+    } catch (error) {
+      console.error('Erro ao criar pacote:', error);
+      return null;
+    }
+  }, [user?.id]);
+
+  const updatePackage = useCallback(async (id: string, data: Partial<Omit<ProcedurePackage, 'id' | 'createdAt'>>) => {
+    if (!user?.id) return;
+
+    try {
+      const { error: updateError } = await supabase
+        .from('packages')
+        .update({ name: data.name, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .eq('user_id', user.id);
+
+      if (updateError) {
+        console.error('Erro ao atualizar pacote:', updateError);
+        return;
+      }
+
+      // Atualizar procedimentos se fornecidos
+      if (data.procedureIds) {
+        // Deletar procedimentos antigos
+        await supabase
+          .from('package_procedures')
+          .delete()
+          .eq('package_id', id);
+
+        // Inserir novos procedimentos
+        if (data.procedureIds.length > 0) {
+          const { error: procError } = await supabase
+            .from('package_procedures')
+            .insert(
+              data.procedureIds.map(code => ({
+                package_id: id,
+                procedure_code: code,
+              }))
+            );
+
+          if (procError) {
+            console.error('Erro ao atualizar procedimentos do pacote:', procError);
+          }
+        }
+      }
+
+      setPackages(prev =>
+        prev.map(pkg =>
+          pkg.id === id
+            ? {
+                ...pkg,
+                ...data,
+                updatedAt: new Date().toISOString(),
+              }
+            : pkg
+        )
+      );
+    } catch (error) {
+      console.error('Erro ao atualizar pacote:', error);
+    }
+  }, [user?.id]);
+
+  const deletePackage = useCallback(async (id: string) => {
+    if (!user?.id) return;
+
+    try {
+      const { error } = await supabase
+        .from('packages')
+        .delete()
+        .eq('id', id)
+        .eq('user_id', user.id);
+
+      if (error) {
+        console.error('Erro ao deletar pacote:', error);
+        return;
+      }
+
+      setPackages(prev => prev.filter(pkg => pkg.id !== id));
+    } catch (error) {
+      console.error('Erro ao deletar pacote:', error);
+    }
+  }, [user?.id]);
 
   const byId = useMemo(() => {
     return Object.fromEntries(packages.map(pkg => [pkg.id, pkg]));
@@ -73,5 +200,6 @@ export function usePackages() {
     updatePackage,
     deletePackage,
     byId,
+    loading,
   };
 }
