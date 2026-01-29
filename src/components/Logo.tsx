@@ -31,12 +31,12 @@ export function Logo({ size = 'md', showText = true }: LogoProps) {
       </div>
       {showText && (
         <div className="flex flex-col">
-          <span className={`${textClasses[size]} font-bold text-foreground leading-tight`}>
-            OrthoCode
+          <span className={`${textClasses[size]} font-bold text-white leading-tight`}>
+            TussPack
           </span>
           {size !== 'sm' && (
-            <span className="text-xs text-muted-foreground">
-              Códigos de Ortopedia
+            <span className="text-xs text-white/80">
+              Códigos TUSS
             </span>
           )}
         </div>

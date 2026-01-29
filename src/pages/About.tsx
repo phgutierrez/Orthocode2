@@ -9,12 +9,12 @@ export default function About() {
     {
       icon: Search,
       title: 'Busca Inteligente',
-      description: 'Encontre procedimentos por nome, código CBHPM, TUSS, SUS ou CID.',
+      description: 'Encontre procedimentos por nome, código TUSS ou palavra-chave na base com 6.400+ códigos.',
     },
     {
       icon: Heart,
-      title: 'Favoritos Offline',
-      description: 'Salve seus procedimentos mais usados e acesse mesmo sem internet.',
+      title: 'Favoritos e Pacotes',
+      description: 'Salve favoritos e crie pacotes personalizados de procedimentos isolados por usuário.',
     },
     {
       icon: Smartphone,
@@ -36,11 +36,11 @@ export default function About() {
           <div className="flex justify-center mb-6">
             <Logo size="lg" />
           </div>
-          <p className="text-primary-foreground/90 text-lg">
-            Sua referência rápida para códigos de procedimentos ortopédicos
+          <p className="text-white/90 text-lg">
+            Sua referência rápida para códigos TUSS de procedimentos médicos
           </p>
-          <Badge className="mt-4 bg-primary-foreground/20 text-primary-foreground border-0">
-            Versão 2.0 MVP
+          <Badge className="mt-4 bg-white/20 text-white border-0">
+            Versão 2.0
           </Badge>
         </div>
       </header>
@@ -69,23 +69,34 @@ export default function About() {
           {/* About */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Sobre o OrthoCode</CardTitle>
+              <CardTitle className="text-lg">Sobre o TussPack</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-muted-foreground">
               <p>
-                O OrthoCode foi desenvolvido para facilitar a busca e consulta de códigos de procedimentos ortopédicos utilizados nas principais tabelas de referência: CBHPM, TUSS e SUS.
+                O TussPack foi desenvolvido para facilitar a busca e consulta de códigos de procedimentos médicos utilizando a tabela TUSS (Terminologia Unificada da Saúde Suplementar).
               </p>
               <p>
-                Esta é uma versão MVP (Produto Mínimo Viável) focada em validar a utilidade da ferramenta. Os dados atuais são exemplos estruturados que serão substituídos por dados reais.
+                <strong className="text-foreground">Versão 2.0 - Recursos Implementados:</strong>
               </p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li>✅ Sistema de autenticação com login e cadastro</li>
+                <li>✅ Isolamento de dados por usuário</li>
+                <li>✅ Favoritos independentes por conta</li>
+                <li>✅ Pacotes personalizados de procedimentos</li>
+                <li>✅ Base de dados real com 6.400+ códigos TUSS</li>
+                <li>✅ Busca inteligente por nome, código ou palavra-chave</li>
+                <li>✅ PWA instalável (funciona offline)</li>
+                <li>✅ Exportação de pacotes com formatação</li>
+              </ul>
               <p>
                 <strong className="text-foreground">Próximas funcionalidades:</strong>
               </p>
               <ul className="list-disc list-inside space-y-1 ml-2">
-                <li>Importação de dados reais via Excel/CSV</li>
-                <li>Calculadora de honorários</li>
+                <li>Calculadora de honorários por procedimento</li>
                 <li>Gerador de documentos TISS</li>
-                <li>Sincronização na nuvem</li>
+                <li>Sincronização na nuvem entre dispositivos</li>
+                <li>Recuperação de senha</li>
+                <li>Perfil de usuário com configurações</li>
               </ul>
             </CardContent>
           </Card>

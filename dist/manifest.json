@@ -1,7 +1,7 @@
 {
-  "name": "OrthoCode - Códigos de Ortopedia",
-  "short_name": "OrthoCode",
-  "description": "Busque e visualize códigos de procedimentos ortopédicos CBHPM, TUSS e SUS",
+  "name": "TussPack - Códigos TUSS",
+  "short_name": "TussPack",
+  "description": "Busque e visualize códigos de procedimentos médicos da tabela TUSS",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F0F9FF",

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -8,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { AlertCircle } from 'lucide-react';
 
 export default function Auth() {
+  const navigate = useNavigate();
   const { login, signup } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -29,6 +31,7 @@ export default function Auth() {
 
     try {
       await login(loginEmail, loginPassword);
+      navigate('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao fazer login');
     } finally {
@@ -48,6 +51,7 @@ export default function Auth() {
     setLoading(true);
     try {
       await signup(signupName, signupEmail, signupPassword);
+      navigate('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao cadastrar');
     } finally {
