@@ -36,7 +36,11 @@ function HomeRoute() {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <Navigate to="/auth" replace />;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-gray-600">Carregando...</div>
+      </div>
+    );
   }
 
   if (!user) {
