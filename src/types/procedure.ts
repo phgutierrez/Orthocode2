@@ -1,13 +1,14 @@
 export type AnatomicRegion = 
   | 'coluna'
-  | 'membros_superiores'
-  | 'membros_inferiores'
-  | 'pelve'
-  | 'mao'
-  | 'pe'
-  | 'joelho'
   | 'ombro'
-  | 'quadril';
+  | 'cotovelo'
+  | 'mao-punho'
+  | 'quadril'
+  | 'joelho'
+  | 'tornozelo-pe'
+  | 'membros-inferiores'
+  | 'membros-superiores'
+  | 'outros';
 
 export type ProcedureType = 
   | 'cirurgico'
@@ -51,14 +52,15 @@ export interface SearchFilters {
 
 export const regionLabels: Record<AnatomicRegion, string> = {
   coluna: 'Coluna',
-  membros_superiores: 'Membros Superiores',
-  membros_inferiores: 'Membros Inferiores',
-  pelve: 'Pelve',
-  mao: 'Mão',
-  pe: 'Pé',
-  joelho: 'Joelho',
   ombro: 'Ombro',
+  cotovelo: 'Cotovelo',
+  'mao-punho': 'Mão e Punho',
   quadril: 'Quadril',
+  joelho: 'Joelho',
+  'tornozelo-pe': 'Tornozelo e Pé',
+  'membros-inferiores': 'Membros Inferiores',
+  'membros-superiores': 'Membros Superiores',
+  outros: 'Outros',
 };
 
 export const typeLabels: Record<ProcedureType, string> = {
