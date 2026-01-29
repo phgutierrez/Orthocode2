@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import type { Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 
 export interface User {
@@ -26,8 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let isMounted = true;
 
-    // Escutar mudanças de autenticação
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const handleSession = async (session: Session | null) => {
       try {
         if (!isMounted) return;
 
@@ -35,7 +35,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const name = session.user.user_metadata?.name || '';
           const email = session.user.email || '';
 
-          // Definir usuário imediatamente
           if (isMounted) {
             setUser({
               id: session.user.id,
@@ -44,7 +43,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             });
           }
 
-          // Buscar perfil do usuário
           const { data: profile, error } = await supabase
             .from('users')
             .select('*')
@@ -58,7 +56,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               name: profile.name,
             });
           } else if (error?.code === 'PGRST116' && isMounted) {
-            // Perfil não existe, criar
             await supabase
               .from('users')
               .insert({
@@ -73,12 +70,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         }
       } catch (error) {
-        console.error('Error in auth state change:', error);
+        console.error('Error handling session:', error);
       } finally {
-        // Sempre finalizar loading após processar sessão
         if (isMounted) {
           setLoading(false);
         }
+      }
+    };
+
+    // Escutar mudanças de autenticação
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      await handleSession(session);
+    });
+
+    // Inicializar sessão ao montar (refresh)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      handleSession(session);
+    }).catch((error) => {
+      console.error('Error initializing session:', error);
+      if (isMounted) {
+        setLoading(false);
       }
     });
 
