@@ -78,30 +78,36 @@ export default function Auth() {
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="login-email" className="block text-sm font-medium text-gray-700 mb-1">
                   Email
                 </label>
                 <Input
+                  id="login-email"
+                  name="email"
                   type="email"
                   placeholder="seu@email.com"
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
                   required
                   disabled={loading}
+                  autoComplete="email"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="login-password" className="block text-sm font-medium text-gray-700 mb-1">
                   Senha
                 </label>
                 <Input
+                  id="login-password"
+                  name="password"
                   type="password"
                   placeholder="••••••"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                   required
                   disabled={loading}
+                  autoComplete="current-password"
                 />
               </div>
 
@@ -133,44 +139,53 @@ export default function Auth() {
 
             <form onSubmit={handleSignup} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="signup-name" className="block text-sm font-medium text-gray-700 mb-1">
                   Nome Completo
                 </label>
                 <Input
+                  id="signup-name"
+                  name="name"
                   type="text"
                   placeholder="Seu Nome Completo"
                   value={signupName}
                   onChange={(e) => setSignupName(e.target.value)}
                   required
                   disabled={loading}
+                  autoComplete="name"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="signup-email" className="block text-sm font-medium text-gray-700 mb-1">
                   Email
                 </label>
                 <Input
+                  id="signup-email"
+                  name="email"
                   type="email"
                   placeholder="seu@email.com"
                   value={signupEmail}
                   onChange={(e) => setSignupEmail(e.target.value)}
                   required
                   disabled={loading}
+                  autoComplete="email"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="signup-password" className="block text-sm font-medium text-gray-700 mb-1">
                   Senha
                 </label>
                 <Input
+                  id="signup-password"
+                  name="password"
                   type="password"
                   placeholder="••••••"
                   value={signupPassword}
                   onChange={(e) => setSignupPassword(e.target.value)}
                   required
                   disabled={loading}
+                  autoComplete="new-password"
                 />
                 <p className="text-xs text-gray-500 mt-1">
                   Mín. 6 caracteres, com letras e números
@@ -178,16 +193,19 @@ export default function Auth() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="signup-password-confirm" className="block text-sm font-medium text-gray-700 mb-1">
                   Confirmar Senha
                 </label>
                 <Input
+                  id="signup-password-confirm"
+                  name="password-confirm"
                   type="password"
                   placeholder="••••••"
                   value={signupPasswordConfirm}
                   onChange={(e) => setSignupPasswordConfirm(e.target.value)}
                   required
                   disabled={loading}
+                  autoComplete="new-password"
                 />
               </div>
 
