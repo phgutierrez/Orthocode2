@@ -33,6 +33,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const name = session.user.user_metadata?.name || '';
           const email = session.user.email || '';
 
+          // Definir usuário imediatamente para evitar tela de login
+          setUser({
+            id: session.user.id,
+            email,
+            name,
+          });
+
           // Buscar perfil do usuário
           const { data: profile } = await supabase
             .from('users')
@@ -55,12 +62,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 email,
                 name,
               });
-
-            setUser({
-              id: session.user.id,
-              email,
-              name,
-            });
           }
         }
       } catch (error) {
@@ -78,6 +79,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
           const name = session.user.user_metadata?.name || '';
           const email = session.user.email || '';
+
+          // Definir usuário imediatamente
+          setUser({
+            id: session.user.id,
+            email,
+            name,
+          });
 
           const { data: profile } = await supabase
             .from('users')
@@ -99,12 +107,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 email,
                 name,
               });
-
-            setUser({
-              id: session.user.id,
-              email,
-              name,
-            });
           }
         } catch (error) {
           console.error('Error updating user profile:', error);
@@ -132,6 +134,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const name = data.user.user_metadata?.name || '';
         const email = data.user.email || '';
 
+        // Definir usuário imediatamente
+        setUser({
+          id: data.user.id,
+          email,
+          name,
+        });
+
         // Buscar perfil do usuário
         const { data: profile } = await supabase
           .from('users')
@@ -153,12 +162,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               email,
               name,
             });
-
-          setUser({
-            id: data.user.id,
-            email,
-            name,
-          });
         }
       }
     } catch (error: any) {
