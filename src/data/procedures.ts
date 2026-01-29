@@ -7,9 +7,22 @@ export async function loadProcedures(): Promise<Procedure[]> {
     return cachedProcedures;
   }
   
-  const response = await fetch('/data/procedures.json');
-  cachedProcedures = await response.json();
-  return cachedProcedures;
+  try {
+    const response = await fetch('/data/procedures.json');
+    if (!response.ok) {
+      throw new Error(`Failed to load procedures: ${response.status}`);
+    }
+    const data = await response.json();
+    if (!Array.isArray(data)) {
+      throw new Error('Procedures data is not an array');
+    }
+    cachedProcedures = data;
+    return cachedProcedures;
+  } catch (error) {
+    console.error('Error loading procedures:', error);
+    cachedProcedures = [];
+    return [];
+  }
 }
 
 export function searchProcedures(procedures: Procedure[], query: string = '', filters?: { region?: string; type?: string }) {
