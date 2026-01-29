@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-
-const FAVORITES_KEY = 'orthocode_favorites';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function useFavorites() {
+  const { user } = useAuth();
+  const FAVORITES_KEY = user ? `orthocode_favorites_${user.id}` : 'orthocode_favorites_guest';
+
   const [favorites, setFavorites] = useState<string[]>([]);
 
   // Load favorites from localStorage on mount
@@ -15,7 +17,7 @@ export function useFavorites() {
     } catch (error) {
       console.error('Error loading favorites:', error);
     }
-  }, []);
+  }, [FAVORITES_KEY]);
 
   // Save favorites to localStorage whenever they change
   const saveFavorites = useCallback((newFavorites: string[]) => {
@@ -25,7 +27,7 @@ export function useFavorites() {
     } catch (error) {
       console.error('Error saving favorites:', error);
     }
-  }, []);
+  }, [FAVORITES_KEY]);
 
   const addFavorite = useCallback((id: string) => {
     saveFavorites([...new Set([...favorites, id])]);

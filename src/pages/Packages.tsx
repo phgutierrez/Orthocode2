@@ -124,17 +124,21 @@ export default function Packages() {
     const pkg = packages.find(item => item.id === id);
     if (!pkg) return;
 
-    const codes = pkg.procedureIds
+    const proceduresList = pkg.procedureIds
       .map(procId => procedures.find(item => item.id === procId))
-      .filter(Boolean)
-      .map(proc => proc!.codes.tuss)
-      .join('\n');
+      .filter(Boolean);
+
+    const formatted = [
+      `${pkg.name}`,
+      '',
+      ...proceduresList.map(proc => `- ${proc!.codes.tuss} - ${proc!.name}`),
+    ].join('\n');
 
     try {
-      await navigator.clipboard.writeText(codes);
+      await navigator.clipboard.writeText(formatted);
       toast({
-        title: 'Códigos copiados',
-        description: 'Os códigos TUSS foram copiados para a área de transferência.',
+        title: 'Pacote copiado',
+        description: 'O pacote foi copiado para a área de transferência.',
       });
     } catch (error) {
       console.error('Error copying codes:', error);

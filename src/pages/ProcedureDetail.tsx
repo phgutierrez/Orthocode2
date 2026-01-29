@@ -71,15 +71,7 @@ export default function ProcedureDetail() {
     const text = `
 ${procedure.name}
 
-CÓDIGOS:
-CBHPM: ${procedure.codes.cbhpm}
-TUSS: ${procedure.codes.tuss}
-SUS: ${procedure.codes.sus}
-
-VALORES:
-CBHPM: ${formatCurrency(procedure.values.cbhpm)}
-TUSS: ${formatCurrency(procedure.values.tuss)}
-SUS: ${formatCurrency(procedure.values.sus)}
+Código TUSS: ${procedure.codes.tuss}
 
 Porte Anestésico: ${procedure.anestheticPort}
 UCO: ${procedure.uco}
@@ -157,30 +149,23 @@ ${procedure.description}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {[
-                { label: 'CBHPM', code: procedure.codes.cbhpm, value: procedure.values.cbhpm },
-                { label: 'TUSS', code: procedure.codes.tuss, value: procedure.values.tuss },
-                { label: 'SUS', code: procedure.codes.sus, value: procedure.values.sus },
-              ].map(({ label, code, value }) => (
-                <div key={label} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                  <div>
-                    <p className="text-sm text-muted-foreground">{label}</p>
-                    <p className="font-mono font-semibold text-foreground">{code}</p>
-                    <p className="text-sm text-primary font-medium">{formatCurrency(value)}</p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleCopy(code, `Código ${label}`)}
-                  >
-                    {copiedField === `Código ${label}` ? (
-                      <Check className="h-4 w-4 text-success" />
-                    ) : (
-                      <Copy className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </Button>
+              <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                <div>
+                  <p className="text-sm text-muted-foreground">Código TUSS</p>
+                  <p className="font-mono font-semibold text-foreground text-lg">{procedure.codes.tuss}</p>
                 </div>
-              ))}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleCopy(procedure.codes.tuss, 'Código TUSS')}
+                >
+                  {copiedField === 'Código TUSS' ? (
+                    <Check className="h-4 w-4 text-success" />
+                  ) : (
+                    <Copy className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </Button>
+              </div>
             </CardContent>
           </Card>
 

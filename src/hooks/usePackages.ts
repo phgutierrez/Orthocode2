@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import type { ProcedurePackage } from '@/types/package';
-
-const PACKAGES_KEY = 'orthocode_packages';
 
 const generateId = () => {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
@@ -11,6 +10,9 @@ const generateId = () => {
 };
 
 export function usePackages() {
+  const { user } = useAuth();
+  const PACKAGES_KEY = user ? `orthocode_packages_${user.id}` : 'orthocode_packages_guest';
+
   const [packages, setPackages] = useState<ProcedurePackage[]>([]);
 
   useEffect(() => {
@@ -22,7 +24,7 @@ export function usePackages() {
     } catch (error) {
       console.error('Error loading packages:', error);
     }
-  }, []);
+  }, [PACKAGES_KEY]);
 
   const persist = useCallback((nextPackages: ProcedurePackage[]) => {
     try {
@@ -31,7 +33,7 @@ export function usePackages() {
     } catch (error) {
       console.error('Error saving packages:', error);
     }
-  }, []);
+  }, [PACKAGES_KEY]);
 
   const addPackage = useCallback((data: Omit<ProcedurePackage, 'id' | 'createdAt' | 'updatedAt'>) => {
     const now = new Date().toISOString();

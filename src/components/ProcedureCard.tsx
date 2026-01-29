@@ -46,25 +46,9 @@ export function ProcedureCard({ procedure, isFavorite, onToggleFavorite, onClick
               </Badge>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 text-xs">
-              <div className="bg-muted rounded-lg p-2 text-center">
-                <p className="text-muted-foreground mb-0.5">CBHPM</p>
-                <p className="font-mono font-medium text-foreground">{procedure.codes.cbhpm}</p>
-              </div>
-              <div className="bg-muted rounded-lg p-2 text-center">
-                <p className="text-muted-foreground mb-0.5">TUSS</p>
-                <p className="font-mono font-medium text-foreground">{procedure.codes.tuss}</p>
-              </div>
-              <div className="bg-muted rounded-lg p-2 text-center">
-                <p className="text-muted-foreground mb-0.5">SUS</p>
-                <p className="font-mono font-medium text-foreground">{procedure.codes.sus}</p>
-              </div>
-            </div>
-
-            <div className="mt-3 flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">
-                CBHPM: <span className="font-semibold text-primary">{formatCurrency(procedure.values.cbhpm)}</span>
-              </span>
+            <div className="bg-muted rounded-lg p-3 text-center">
+              <p className="text-muted-foreground mb-1 text-xs">Código TUSS</p>
+              <p className="font-mono font-medium text-foreground text-lg">{procedure.codes.tuss}</p>
             </div>
           </div>
 
