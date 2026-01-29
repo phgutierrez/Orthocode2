@@ -33,12 +33,13 @@ export default function Packages() {
     if (!query.trim()) return favoriteProcedures;
     const q = query.toLowerCase();
     return favoriteProcedures.filter((procedure) => {
+      if (!procedure) return false;
       return (
-        procedure.name.toLowerCase().includes(q) ||
-        procedure.codes.tuss.toLowerCase().includes(q) ||
-        procedure.codes.cbhpm.toLowerCase().includes(q) ||
-        procedure.codes.sus.toLowerCase().includes(q) ||
-        procedure.keywords.some(keyword => keyword.toLowerCase().includes(q))
+        procedure.name?.toLowerCase().includes(q) ||
+        procedure.codes?.tuss?.toLowerCase().includes(q) ||
+        procedure.codes?.cbhpm?.toLowerCase().includes(q) ||
+        procedure.codes?.sus?.toLowerCase().includes(q) ||
+        procedure.keywords?.some(keyword => keyword?.toLowerCase().includes(q))
       );
     });
   }, [query, favoriteProcedures]);
