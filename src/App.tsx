@@ -32,6 +32,20 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return children;
 }
 
+function HomeRoute() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  if (!user) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  return <Index />;
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -44,9 +58,7 @@ const App = () => (
             <Route
               path="/"
               element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
+                <HomeRoute />
               }
             />
             <Route
