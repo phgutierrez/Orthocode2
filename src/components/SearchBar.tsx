@@ -75,6 +75,9 @@ export function SearchBar({ onSearch, onSelectProcedure, placeholder = 'Buscar p
           <Input
             ref={inputRef}
             type="text"
+            id="procedure-search"
+            name="procedure-search"
+            autoComplete="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={placeholder}

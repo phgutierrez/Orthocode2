@@ -1,9 +1,10 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createClient, SupabaseClient, Session } from '@supabase/supabase-js';
 
 export interface User {
   id: string;
-  name: string;
   email: string;
+  name?: string;
 }
 
 interface AuthContextType {
@@ -11,98 +12,197 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const USERS_KEY = 'orthocode_users';
-const CURRENT_USER_KEY = 'orthocode_current_user';
+// Inicializar cliente Supabase
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-interface StoredUser extends User {
-  password: string;
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Supabase credentials not found in environment variables');
 }
+
+const supabase: SupabaseClient = createClient(supabaseUrl || '', supabaseAnonKey || '');
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Carregar usuário ao montar
+  // Carregar usuário ao montar e escutar mudanças de sessão
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(CURRENT_USER_KEY);
-      if (stored) {
-        const currentUser = JSON.parse(stored);
-        setUser(currentUser);
+    const initAuth = async () => {
+      try {
+        // Verificar sessão existente
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session?.user) {
+          // Buscar perfil do usuário
+          const { data: profile } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+
+          if (profile) {
+            setUser({
+              id: profile.id,
+              email: profile.email,
+              name: profile.name,
+            });
+          } else {
+            // Se não existe perfil, criar um
+            await supabase
+              .from('users')
+              .insert({
+                id: session.user.id,
+                email: session.user.email,
+                name: session.user.user_metadata?.name || '',
+              });
+
+            setUser({
+              id: session.user.id,
+              email: session.user.email,
+              name: session.user.user_metadata?.name || '',
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error initializing auth:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error loading user:', error);
-    } finally {
-      setLoading(false);
-    }
+    };
+
+    initAuth();
+
+    // Escutar mudanças de autenticação
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        try {
+          const { data: profile } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+
+          if (profile) {
+            setUser({
+              id: profile.id,
+              email: profile.email,
+              name: profile.name,
+            });
+          }
+        } catch (error) {
+          console.error('Error updating user profile:', error);
+        }
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
   }, []);
 
-  const getUsers = (): StoredUser[] => {
-    try {
-      const stored = localStorage.getItem(USERS_KEY);
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  };
-
-  const saveUsers = (users: StoredUser[]) => {
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
-  };
-
   const login = async (email: string, password: string) => {
-    const users = getUsers();
-    const found = users.find(u => u.email === email && u.password === password);
-    
-    if (!found) {
-      throw new Error('Email ou senha inválidos');
-    }
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    const { password: _, ...userWithoutPassword } = found;
-    setUser(userWithoutPassword);
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userWithoutPassword));
+      if (error) throw error;
+
+      if (data.user) {
+        // Buscar perfil do usuário
+        const { data: profile } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', data.user.id)
+          .single();
+
+        if (profile) {
+          setUser({
+            id: profile.id,
+            email: profile.email,
+            name: profile.name,
+          });
+        }
+      }
+    } catch (error: any) {
+      throw new Error(error.message || 'Erro ao fazer login');
+    }
   };
 
   const signup = async (name: string, email: string, password: string) => {
-    // Validar senha
-    if (password.length < 6) {
-      throw new Error('Senha deve ter no mínimo 6 caracteres');
-    }
-    if (!/[a-zA-Z]/.test(password)) {
-      throw new Error('Senha deve conter pelo menos uma letra');
-    }
-    if (!/[0-9]/.test(password)) {
-      throw new Error('Senha deve conter pelo menos um número');
-    }
+    try {
+      // Validar senha
+      if (password.length < 6) {
+        throw new Error('Senha deve ter no mínimo 6 caracteres');
+      }
+      if (!/[a-zA-Z]/.test(password)) {
+        throw new Error('Senha deve conter pelo menos uma letra');
+      }
+      if (!/[0-9]/.test(password)) {
+        throw new Error('Senha deve conter pelo menos um número');
+      }
 
-    const users = getUsers();
-    if (users.some(u => u.email === email)) {
-      throw new Error('Este email já está registrado');
+      // Criar usuário no Supabase Auth
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name,
+          },
+        },
+      });
+
+      if (error) {
+        // Supabase retorna erro se email já existe
+        if (error.message.includes('already registered')) {
+          throw new Error('Este email já está registrado');
+        }
+        throw error;
+      }
+
+      if (data.user) {
+        // Criar perfil do usuário na tabela 'users'
+        const { error: profileError } = await supabase
+          .from('users')
+          .insert({
+            id: data.user.id,
+            email: data.user.email,
+            name,
+          });
+
+        if (profileError) {
+          console.error('Erro ao criar perfil:', profileError);
+        }
+
+        setUser({
+          id: data.user.id,
+          email: data.user.email,
+          name,
+        });
+      }
+    } catch (error: any) {
+      throw new Error(error.message || 'Erro ao criar conta');
     }
-
-    const newUser: StoredUser = {
-      id: `user_${Date.now()}`,
-      name,
-      email,
-      password,
-    };
-
-    users.push(newUser);
-    saveUsers(users);
-
-    const { password: _, ...userWithoutPassword } = newUser;
-    setUser(userWithoutPassword);
-    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userWithoutPassword));
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem(CURRENT_USER_KEY);
+  const logout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      setUser(null);
+    } catch (error: any) {
+      throw new Error(error.message || 'Erro ao fazer logout');
+    }
   };
 
   return (

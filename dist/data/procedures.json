@@ -24663,7 +24663,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "coluna",
+    "region": "tornozelo-pe",
     "type": "ambulatorial",
     "anestheticPort": "0",
     "uco": 0,
@@ -26229,7 +26229,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "coluna",
+    "region": "tornozelo-pe",
     "type": "cirurgico",
     "anestheticPort": "0",
     "uco": 0,
@@ -70077,7 +70077,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "coluna",
+    "region": "quadril",
     "type": "cirurgico",
     "anestheticPort": "0",
     "uco": 0,
@@ -70293,7 +70293,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "coluna",
+    "region": "quadril",
     "type": "ambulatorial",
     "anestheticPort": "0",
     "uco": 0,
@@ -152211,7 +152211,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "ombro",
+    "region": "joelho",
     "type": "diagnostico",
     "anestheticPort": "0",
     "uco": 0,
