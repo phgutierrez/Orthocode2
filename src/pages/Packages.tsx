@@ -30,8 +30,9 @@ export default function Packages() {
   }, [favorites, procedures]);
 
   const filteredProcedures = useMemo(() => {
-    if (!query.trim()) return favoriteProcedures;
-    const q = query.toLowerCase();
+    const safeQuery = query?.trim() ?? '';
+    if (!safeQuery) return favoriteProcedures;
+    const q = safeQuery.toLowerCase();
     return favoriteProcedures.filter((procedure) => {
       if (!procedure) return false;
       return (
