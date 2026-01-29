@@ -28,57 +28,57 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Escutar mudanças de autenticação
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!isMounted) return;
+      try {
+        if (!isMounted) return;
 
-      if (session?.user) {
-        try {
+        if (session?.user) {
           const name = session.user.user_metadata?.name || '';
           const email = session.user.email || '';
 
           // Definir usuário imediatamente
-          setUser({
-            id: session.user.id,
-            email,
-            name,
-          });
+          if (isMounted) {
+            setUser({
+              id: session.user.id,
+              email,
+              name,
+            });
+          }
 
           // Buscar perfil do usuário
-          const { data: profile } = await supabase
+          const { data: profile, error } = await supabase
             .from('users')
             .select('*')
             .eq('id', session.user.id)
             .single();
 
-          if (profile) {
-            if (isMounted) {
-              setUser({
-                id: profile.id,
-                email: profile.email,
-                name: profile.name,
-              });
-            }
-          } else {
-            // Se não existe perfil, criar/atualizar
+          if (!error && profile && isMounted) {
+            setUser({
+              id: profile.id,
+              email: profile.email,
+              name: profile.name,
+            });
+          } else if (error?.code === 'PGRST116' && isMounted) {
+            // Perfil não existe, criar
             await supabase
               .from('users')
-              .upsert({
+              .insert({
                 id: session.user.id,
                 email,
                 name,
               });
           }
-        } catch (error) {
-          console.error('Error updating user profile:', error);
+        } else {
+          if (isMounted) {
+            setUser(null);
+          }
         }
-      } else {
+      } catch (error) {
+        console.error('Error in auth state change:', error);
+      } finally {
+        // Sempre finalizar loading após processar sessão
         if (isMounted) {
-          setUser(null);
+          setLoading(false);
         }
-      }
-
-      // Sempre finalizar loading após processar sessão
-      if (isMounted) {
-        setLoading(false);
       }
     });
 
