@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { searchProcedures } from '@/data/procedures';
+import { searchProcedures, loadProcedures } from '@/data/procedures';
 import { Procedure } from '@/types/procedure';
 
 interface SearchBarProps {
@@ -15,19 +15,27 @@ export function SearchBar({ onSearch, onSelectProcedure, placeholder = 'Buscar p
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<Procedure[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [procedures, setProcedures] = useState<Procedure[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (query.length >= 2) {
-      const results = searchProcedures(query).slice(0, 5);
+    loadProcedures().then(setProcedures).catch(err => {
+      console.error('Error loading procedures in SearchBar:', err);
+      setProcedures([]);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (query.length >= 2 && Array.isArray(procedures)) {
+      const results = searchProcedures(procedures, query).slice(0, 5);
       setSuggestions(results);
       setShowSuggestions(true);
     } else {
       setSuggestions([]);
       setShowSuggestions(false);
     }
-  }, [query]);
+  }, [query, procedures]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
