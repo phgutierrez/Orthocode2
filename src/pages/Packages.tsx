@@ -21,6 +21,7 @@ export default function Packages() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [query, setQuery] = useState('');
+  const [packageQuery, setPackageQuery] = useState('');
   const [selectedProcedures, setSelectedProcedures] = useState<string[]>([]);
 
   const favoriteProcedures = useMemo(() => {
@@ -47,6 +48,18 @@ export default function Packages() {
       );
     });
   }, [query, favoriteProcedures]);
+
+  const filteredPackages = useMemo(() => {
+    const safeQuery = packageQuery?.trim() ?? '';
+    if (!safeQuery) return packages;
+    const q = safeQuery.toLowerCase();
+    return packages.filter((pkg) => {
+      return (
+        pkg.name?.toLowerCase().includes(q) ||
+        pkg.description?.toLowerCase().includes(q)
+      );
+    });
+  }, [packageQuery, packages]);
 
   if (loading) {
     return (
@@ -259,16 +272,35 @@ export default function Packages() {
           </Card>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-foreground">Seus pacotes</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-foreground">Seus pacotes</h2>
+            </div>
+            {packages.length > 0 && (
+              <div className="relative">
+                <Search className="h-4 w-4 text-muted-foreground absolute left-3 top-3" />
+                <Input
+                  className="pl-9"
+                  placeholder="Buscar pacotes por nome..."
+                  value={packageQuery}
+                  onChange={(event) => setPackageQuery(event.target.value)}
+                />
+              </div>
+            )}
             {packages.length === 0 ? (
               <Card>
                 <CardContent className="p-6 text-center text-muted-foreground">
                   Nenhum pacote criado ainda. Monte seu primeiro pacote acima.
                 </CardContent>
               </Card>
+            ) : filteredPackages.length === 0 ? (
+              <Card>
+                <CardContent className="p-6 text-center text-muted-foreground">
+                  Nenhum pacote encontrado com esse nome.
+                </CardContent>
+              </Card>
             ) : (
               <div className="space-y-4">
-                {packages.map((pkg) => {
+                {filteredPackages.map((pkg) => {
                   const proceduresList = pkg.procedureIds
                     .map(procId => procedures.find(item => item.id === procId))
                     .filter(Boolean);
