@@ -91,7 +91,7 @@ export default function Packages() {
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!name.trim()) {
       toast({
         title: 'Informe um nome',
@@ -114,21 +114,29 @@ export default function Packages() {
       procedureIds: selectedProcedures,
     };
 
-    if (editingId) {
-      updatePackage(editingId, payload);
+    try {
+      if (editingId) {
+        await updatePackage(editingId, payload);
+        toast({
+          title: 'Pacote atualizado',
+          description: 'As alterações foram salvas com sucesso.',
+        });
+      } else {
+        await addPackage(payload);
+        toast({
+          title: 'Pacote criado',
+          description: 'Seu pacote foi criado e já está disponível.',
+        });
+      }
+
+      resetForm();
+    } catch (error: any) {
+      const message = error?.message || 'Não foi possível salvar o pacote.';
       toast({
-        title: 'Pacote atualizado',
-        description: 'As alterações foram salvas com sucesso.',
-      });
-    } else {
-      addPackage(payload);
-      toast({
-        title: 'Pacote criado',
-        description: 'Seu pacote foi criado e já está disponível.',
+        title: 'Erro ao salvar pacote',
+        description: message,
       });
     }
-
-    resetForm();
   };
 
   const handleEdit = (id: string) => {

@@ -86,7 +86,7 @@ export function usePackages() {
 
       if (pkgError) {
         console.error('Erro ao criar pacote:', pkgError);
-        return null;
+        throw pkgError;
       }
 
       // Adicionar procedimentos
@@ -118,7 +118,7 @@ export function usePackages() {
       return newPackage;
     } catch (error) {
       console.error('Erro ao criar pacote:', error);
-      return null;
+      throw error;
     }
   }, [user?.id]);
 
@@ -146,7 +146,7 @@ export function usePackages() {
 
       if (updateError) {
         console.error('Erro ao atualizar pacote:', updateError);
-        return;
+        throw updateError;
       }
 
       // Atualizar procedimentos se fornecidos
@@ -189,6 +189,7 @@ export function usePackages() {
       );
     } catch (error) {
       console.error('Erro ao atualizar pacote:', error);
+      throw error;
     }
   }, [user?.id]);
 
