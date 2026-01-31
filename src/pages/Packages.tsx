@@ -314,33 +314,31 @@ export default function Packages() {
                     .filter(Boolean);
 
                   return (
-                    <Card key={pkg.id}>
+                    <Card
+                      key={pkg.id}
+                      className="cursor-pointer"
+                      onClick={() => setViewingPackageId(pkg.id)}
+                    >
                       <CardContent className="p-4 space-y-3">
-                        <button
-                          type="button"
-                          onClick={() => setViewingPackageId(pkg.id)}
-                          className="text-left w-full hover:opacity-75 transition-opacity"
-                        >
-                          <div className="flex items-start justify-between gap-3">
-                            <div className="flex-1">
-                              <h3 className="text-base font-semibold text-foreground">{pkg.name}</h3>
-                              {pkg.description && (
-                                <p className="text-sm text-muted-foreground line-clamp-2">{pkg.description}</p>
-                              )}
-                              <p className="text-xs text-muted-foreground mt-1">
-                                {proceduresList.length} código{proceduresList.length !== 1 ? 's' : ''}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                              <Button variant="ghost" size="icon" onClick={() => handleEdit(pkg.id)}>
-                                <Pencil className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="icon" onClick={() => deletePackage(pkg.id)}>
-                                <Trash2 className="h-4 w-4 text-destructive" />
-                              </Button>
-                            </div>
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1">
+                            <h3 className="text-base font-semibold text-foreground">{pkg.name}</h3>
+                            {pkg.description && (
+                              <p className="text-sm text-muted-foreground line-clamp-2">{pkg.description}</p>
+                            )}
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {proceduresList.length} código{proceduresList.length !== 1 ? 's' : ''}
+                            </p>
                           </div>
-                        </button>
+                          <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                            <Button variant="ghost" size="icon" onClick={() => handleEdit(pkg.id)}>
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="icon" onClick={() => deletePackage(pkg.id)}>
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
+                        </div>
 
                         <div className="flex flex-wrap gap-1">
                           {proceduresList.slice(0, 4).map((procedure) => (
