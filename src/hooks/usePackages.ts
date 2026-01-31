@@ -39,6 +39,7 @@ export function usePackages() {
               return {
                 id: pkg.id,
                 name: pkg.name,
+                description: pkg.description ?? undefined,
                 procedureIds: [],
                 createdAt: pkg.created_at,
                 updatedAt: pkg.updated_at,
@@ -48,6 +49,7 @@ export function usePackages() {
             return {
               id: pkg.id,
               name: pkg.name,
+              description: pkg.description ?? undefined,
               procedureIds: procedures?.map(p => p.procedure_code) || [],
               createdAt: pkg.created_at,
               updatedAt: pkg.updated_at,
@@ -72,7 +74,13 @@ export function usePackages() {
     try {
       const { data: pkgData, error: pkgError } = await supabase
         .from('packages')
-        .insert([{ user_id: user.id, name: data.name }])
+        .insert([
+          {
+            user_id: user.id,
+            name: data.name,
+            description: data.description ?? null,
+          },
+        ])
         .select()
         .single();
 
@@ -100,6 +108,7 @@ export function usePackages() {
       const newPackage: ProcedurePackage = {
         id: pkgData.id,
         name: pkgData.name,
+        description: pkgData.description ?? data.description ?? undefined,
         procedureIds: data.procedureIds || [],
         createdAt: pkgData.created_at,
         updatedAt: pkgData.updated_at,
@@ -119,7 +128,11 @@ export function usePackages() {
     try {
       const { error: updateError } = await supabase
         .from('packages')
-        .update({ name: data.name, updated_at: new Date().toISOString() })
+        .update({
+          name: data.name,
+          description: data.description ?? null,
+          updated_at: new Date().toISOString(),
+        })
         .eq('id', id)
         .eq('user_id', user.id);
 
