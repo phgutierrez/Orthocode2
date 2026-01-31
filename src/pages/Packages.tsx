@@ -110,7 +110,7 @@ export default function Packages() {
 
     const payload = {
       name: name.trim(),
-      description: description.trim() || undefined,
+      description: description.trim(),
       procedureIds: selectedProcedures,
     };
 

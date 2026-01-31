@@ -126,13 +126,21 @@ export function usePackages() {
     if (!user?.id) return;
 
     try {
+      const updateData: { name?: string; description?: string; updated_at: string } = {
+        updated_at: new Date().toISOString(),
+      };
+
+      if (data.name !== undefined) {
+        updateData.name = data.name;
+      }
+
+      if (data.description !== undefined) {
+        updateData.description = data.description;
+      }
+
       const { error: updateError } = await supabase
         .from('packages')
-        .update({
-          name: data.name,
-          description: data.description ?? null,
-          updated_at: new Date().toISOString(),
-        })
+        .update(updateData)
         .eq('id', id)
         .eq('user_id', user.id);
 
@@ -171,7 +179,9 @@ export function usePackages() {
           pkg.id === id
             ? {
                 ...pkg,
-                ...data,
+                ...(data.name !== undefined ? { name: data.name } : {}),
+                ...(data.description !== undefined ? { description: data.description } : {}),
+                ...(data.procedureIds ? { procedureIds: data.procedureIds } : {}),
                 updatedAt: new Date().toISOString(),
               }
             : pkg
