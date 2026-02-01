@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usePackages } from '@/hooks/usePackages';
 import { useProcedures } from '@/hooks/useProcedures';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -24,6 +25,7 @@ export default function Packages() {
   const [packageQuery, setPackageQuery] = useState('');
   const [selectedProcedures, setSelectedProcedures] = useState<string[]>([]);
   const [viewingPackageId, setViewingPackageId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('list');
 
   const favoriteProcedures = useMemo(() => {
     if (!Array.isArray(favorites) || !Array.isArray(procedures)) {
@@ -139,6 +141,11 @@ export default function Packages() {
     }
   };
 
+  const handleNewPackage = () => {
+    resetForm();
+    setActiveTab('create');
+  };
+
   const handleEdit = (id: string) => {
     const pkg = packages.find(item => item.id === id);
     if (!pkg) return;
@@ -147,6 +154,7 @@ export default function Packages() {
     setDescription(pkg.description ?? '');
     setSelectedProcedures(pkg.procedureIds);
     setQuery('');
+    setActiveTab('create');
   };
 
   const handleCopyCodes = async (id: string) => {
@@ -186,21 +194,141 @@ export default function Packages() {
             <Package className="h-6 w-6 text-primary" />
             <h1 className="text-2xl font-bold text-foreground">Pacotes</h1>
           </div>
-          <p className="text-muted-foreground">
-            Crie pacotes para agrupar códigos TUSS e compartilhar rapidamente.
+          <p className="text-muted-foreground text-sm">
+            Agrupe códigos TUSS em pacotes reutilizáveis
           </p>
         </div>
       </header>
 
       <main className="px-4 py-6">
-        <div className="max-w-2xl mx-auto space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">
-                {editingId ? 'Editar pacote' : 'Novo pacote'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+        <div className="max-w-2xl mx-auto">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-6">
+              <TabsTrigger value="list">Meus Pacotes</TabsTrigger>
+              <TabsTrigger value="create">
+                {editingId ? 'Editar' : 'Criar Novo'}
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="list" className="space-y-4">
+              {packages.length > 0 && (
+                <div className="relative">
+                  <Search className="h-4 w-4 text-muted-foreground absolute left-3 top-3" />
+                  <Input
+                    className="pl-9"
+                    placeholder="Buscar pacotes..."
+                    value={packageQuery}
+                    onChange={(event) => setPackageQuery(event.target.value)}
+                  />
+                </div>
+              )}
+
+              {packages.length === 0 ? (
+                <Card>
+                  <CardContent className="p-8 text-center space-y-4">
+                    <Package className="h-12 w-12 text-muted-foreground mx-auto" />
+                    <div className="space-y-2">
+                      <p className="text-muted-foreground">Nenhum pacote criado ainda</p>
+                      <Button onClick={handleNewPackage} className="gap-2">
+                        <Plus className="h-4 w-4" />
+                        Criar primeiro pacote
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ) : filteredPackages.length === 0 ? (
+                <Card>
+                  <CardContent className="p-6 text-center text-muted-foreground">
+                    Nenhum pacote encontrado
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="space-y-3">
+                  {filteredPackages.map((pkg) => {
+                    const proceduresList = pkg.procedureIds
+                      .map(procId => procedures.find(item => item.id === procId))
+                      .filter(Boolean);
+
+                    return (
+                      <Card
+                        key={pkg.id}
+                        className="cursor-pointer hover:border-primary transition-colors"
+                        onClick={() => setViewingPackageId(pkg.id)}
+                      >
+                        <CardContent className="p-4 space-y-3">
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-base font-semibold text-foreground truncate">
+                                {pkg.name}
+                              </h3>
+                              {pkg.description && (
+                                <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                                  {pkg.description}
+                                </p>
+                              )}
+                              <p className="text-xs text-muted-foreground mt-2">
+                                {proceduresList.length} procedimento{proceduresList.length !== 1 ? 's' : ''}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                              <Button 
+                                variant="ghost" 
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => handleEdit(pkg.id)}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => deletePackage(pkg.id)}
+                              >
+                                <Trash2 className="h-4 w-4 text-destructive" />
+                              </Button>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-wrap gap-1">
+                            {proceduresList.slice(0, 3).map((procedure) => (
+                              <Badge key={procedure!.id} variant="secondary" className="text-xs">
+                                {procedure!.codes.tuss}
+                              </Badge>
+                            ))}
+                            {proceduresList.length > 3 && (
+                              <Badge variant="outline" className="text-xs">
+                                +{proceduresList.length - 3}
+                              </Badge>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              )}
+
+              {packages.length > 0 && (
+                <Button 
+                  onClick={handleNewPackage} 
+                  className="w-full gap-2"
+                  variant="outline"
+                >
+                  <Plus className="h-4 w-4" />
+                  Criar novo pacote
+                </Button>
+              )}
+            </TabsContent>
+
+            <TabsContent value="create" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">
+                    {editingId ? 'Editar pacote' : 'Novo pacote'}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-foreground">Nome do pacote</label>
                 <Input
@@ -273,105 +401,21 @@ export default function Packages() {
               </div>
               )}
 
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Button className="gap-2" onClick={handleSubmit} disabled={favoriteProcedures.length === 0}>
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                <Button className="flex-1 gap-2" onClick={handleSubmit} disabled={favoriteProcedures.length === 0}>
                   <Plus className="h-4 w-4" />
                   {editingId ? 'Salvar alterações' : 'Criar pacote'}
                 </Button>
                 {editingId && (
-                  <Button variant="ghost" onClick={resetForm}>
-                    Cancelar edição
+                  <Button variant="outline" onClick={resetForm}>
+                    Cancelar
                   </Button>
                 )}
               </div>
             </CardContent>
           </Card>
-
-          <section className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-foreground">Seus pacotes</h2>
-            </div>
-            {packages.length > 0 && (
-              <div className="relative">
-                <Search className="h-4 w-4 text-muted-foreground absolute left-3 top-3" />
-                <Input
-                  className="pl-9"
-                  placeholder="Buscar pacotes por nome..."
-                  value={packageQuery}
-                  onChange={(event) => setPackageQuery(event.target.value)}
-                />
-              </div>
-            )}
-            {packages.length === 0 ? (
-              <Card>
-                <CardContent className="p-6 text-center text-muted-foreground">
-                  Nenhum pacote criado ainda. Monte seu primeiro pacote acima.
-                </CardContent>
-              </Card>
-            ) : filteredPackages.length === 0 ? (
-              <Card>
-                <CardContent className="p-6 text-center text-muted-foreground">
-                  Nenhum pacote encontrado com esse nome.
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="space-y-4">
-                {filteredPackages.map((pkg) => {
-                  const proceduresList = pkg.procedureIds
-                    .map(procId => procedures.find(item => item.id === procId))
-                    .filter(Boolean);
-
-                  return (
-                    <Card
-                      key={pkg.id}
-                      className="cursor-pointer"
-                      onClick={() => setViewingPackageId(pkg.id)}
-                    >
-                      <CardContent className="p-4 space-y-3">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex-1">
-                            <h3 className="text-base font-semibold text-foreground">{pkg.name}</h3>
-                            {pkg.description && (
-                              <p className="text-sm text-muted-foreground line-clamp-2">{pkg.description}</p>
-                            )}
-                            <p className="text-xs text-muted-foreground mt-1">
-                              {proceduresList.length} código{proceduresList.length !== 1 ? 's' : ''}
-                            </p>
-                          </div>
-                          <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                            <Button variant="ghost" size="icon" onClick={() => handleEdit(pkg.id)}>
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                            <Button variant="ghost" size="icon" onClick={() => deletePackage(pkg.id)}>
-                              <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-wrap gap-1">
-                          {proceduresList.slice(0, 4).map((procedure) => (
-                            <Badge key={procedure!.id} variant="secondary" className="text-xs">
-                              {procedure!.codes.tuss}
-                            </Badge>
-                          ))}
-                          {proceduresList.length > 4 && (
-                            <Badge variant="outline" className="text-xs">
-                              +{proceduresList.length - 4}
-                            </Badge>
-                          )}
-                        </div>
-
-                        <Button variant="outline" className="w-full gap-2" onClick={() => handleCopyCodes(pkg.id)}>
-                          <Clipboard className="h-4 w-4" />
-                          Copiar códigos TUSS
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            )}
-          </section>
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
 
