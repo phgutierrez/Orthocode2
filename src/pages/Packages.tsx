@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Package, Plus, Clipboard, Pencil, Trash2, Search, X } from 'lucide-react';
+import { Package, Plus, Clipboard, Pencil, Trash2, Search, X, Share2, Bell, Check } from 'lucide-react';
 import { BottomNav } from '@/components/BottomNav';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,16 +8,24 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { usePackages } from '@/hooks/usePackages';
 import { useProcedures } from '@/hooks/useProcedures';
 import { useFavorites } from '@/hooks/useFavorites';
+import { useUsers } from '@/hooks/useUsers';
+import { useNotifications } from '@/hooks/useNotifications';
+import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/components/ui/use-toast';
 import { regionLabels, typeLabels } from '@/types/procedure';
+import { supabase } from '@/lib/supabase';
 
 export default function Packages() {
+  const { user } = useAuth();
   const { packages, addPackage, updatePackage, deletePackage } = usePackages();
   const { procedures, loading } = useProcedures();
   const { favorites } = useFavorites();
+  const { users } = useUsers();
+  const { notifications, unreadCount, markAsRead, deleteNotification, refetch: refetchNotifications } = useNotifications();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -26,6 +34,7 @@ export default function Packages() {
   const [selectedProcedures, setSelectedProcedures] = useState<string[]>([]);
   const [viewingPackageId, setViewingPackageId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('list');
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const favoriteProcedures = useMemo(() => {
     if (!Array.isArray(favorites) || !Array.isArray(procedures)) {
@@ -186,13 +195,146 @@ export default function Packages() {
     }
   };
 
+  const handleSharePackage = async (packageId: string, toUserId: string) => {
+    if (!user?.id) return;
+
+    try {
+      // Criar compartilhamento
+      const { error: shareError } = await supabase
+        .from('shared_packages')
+        .insert({
+          package_id: packageId,
+          from_user_id: user.id,
+          to_user_id: toUserId,
+          status: 'pending',
+        });
+
+      if (shareError) throw shareError;
+
+      // Criar notificação
+      const pkg = packages.find(p => p.id === packageId);
+      const { error: notifError } = await supabase
+        .from('notifications')
+        .insert({
+          user_id: toUserId,
+          type: 'package_share',
+          data: {
+            package_id: packageId,
+            package_name: pkg?.name,
+            from_user_name: user.name,
+            from_user_id: user.id,
+          },
+        });
+
+      if (notifError) throw notifError;
+
+      toast({
+        title: 'Pacote compartilhado',
+        description: 'O usuário receberá uma notificação.',
+      });
+    } catch (error: any) {
+      console.error('Erro ao compartilhar pacote:', error);
+      toast({
+        title: 'Erro ao compartilhar',
+        description: error.message || 'Não foi possível compartilhar o pacote.',
+      });
+    }
+  };
+
+  const handleAcceptShare = async (notificationId: string, shareData: any) => {
+    if (!user?.id) return;
+
+    try {
+      // Buscar pacote compartilhado
+      const { data: sharedPkg, error: fetchError } = await supabase
+        .from('packages')
+        .select('*, package_procedures(procedure_code)')
+        .eq('id', shareData.package_id)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // Criar cópia do pacote para o usuário
+      const payload = {
+        name: sharedPkg.name,
+        description: sharedPkg.description || '',
+        procedureIds: sharedPkg.package_procedures?.map((p: any) => p.procedure_code) || [],
+      };
+
+      await addPackage(payload);
+
+      // Atualizar status do compartilhamento
+      await supabase
+        .from('shared_packages')
+        .update({ status: 'accepted' })
+        .eq('package_id', shareData.package_id)
+        .eq('to_user_id', user.id);
+
+      // Deletar notificação
+      await deleteNotification(notificationId);
+
+      toast({
+        title: 'Pacote adicionado',
+        description: 'O pacote foi adicionado aos seus pacotes.',
+      });
+    } catch (error: any) {
+      console.error('Erro ao aceitar compartilhamento:', error);
+      toast({
+        title: 'Erro ao aceitar',
+        description: error.message || 'Não foi possível adicionar o pacote.',
+      });
+    }
+  };
+
+  const handleRejectShare = async (notificationId: string, shareData: any) => {
+    if (!user?.id) return;
+
+    try {
+      // Atualizar status do compartilhamento
+      await supabase
+        .from('shared_packages')
+        .update({ status: 'rejected' })
+        .eq('package_id', shareData.package_id)
+        .eq('to_user_id', user.id);
+
+      // Deletar notificação
+      await deleteNotification(notificationId);
+
+      toast({
+        title: 'Compartilhamento recusado',
+        description: 'A solicitação foi removida.',
+      });
+    } catch (error: any) {
+      console.error('Erro ao rejeitar compartilhamento:', error);
+      toast({
+        title: 'Erro ao rejeitar',
+        description: error.message || 'Não foi possível recusar o compartilhamento.',
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background pb-20">
       <header className="bg-card border-b border-border pt-6 pb-4 px-4 safe-area-top">
         <div className="max-w-2xl mx-auto">
-          <div className="flex items-center gap-3 mb-2">
-            <Package className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl font-bold text-foreground">Pacotes</h1>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <Package className="h-6 w-6 text-primary" />
+              <h1 className="text-2xl font-bold text-foreground">Pacotes</h1>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative"
+              onClick={() => setShowNotifications(!showNotifications)}
+            >
+              <Bell className="h-5 w-5" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 h-5 w-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
+                  {unreadCount}
+                </span>
+              )}
+            </Button>
           </div>
           <p className="text-muted-foreground text-sm">
             Agrupe códigos TUSS em pacotes reutilizáveis
@@ -271,6 +413,34 @@ export default function Packages() {
                               </p>
                             </div>
                             <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon"
+                                    className="h-8 w-8"
+                                  >
+                                    <Share2 className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="max-h-60 overflow-y-auto">
+                                  {users
+                                    .filter(u => u.id !== user?.id)
+                                    .map(u => (
+                                      <DropdownMenuItem
+                                        key={u.id}
+                                        onClick={() => handleSharePackage(pkg.id, u.id)}
+                                      >
+                                        {u.name || u.email}
+                                      </DropdownMenuItem>
+                                    ))}
+                                  {users.filter(u => u.id !== user?.id).length === 0 && (
+                                    <DropdownMenuItem disabled>
+                                      Nenhum usuário disponível
+                                    </DropdownMenuItem>
+                                  )}
+                                </DropdownMenuContent>
+                              </DropdownMenu>
                               <Button 
                                 variant="ghost" 
                                 size="icon"
@@ -420,6 +590,80 @@ export default function Packages() {
       </main>
 
       <BottomNav />
+
+      {/* Modal de notificações */}
+      {showNotifications && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-20 px-4"
+          onClick={() => setShowNotifications(false)}
+        >
+          <Card 
+            className="w-full max-w-md max-h-[70vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CardHeader className="sticky top-0 bg-card border-b">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg">Notificações</CardTitle>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowNotifications(false)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="p-4 space-y-3">
+              {notifications.length === 0 ? (
+                <p className="text-center text-sm text-muted-foreground py-8">
+                  Nenhuma notificação
+                </p>
+              ) : (
+                notifications.map((notification) => {
+                  if (notification.type === 'package_share') {
+                    return (
+                      <Card key={notification.id} className={notification.read ? 'bg-muted/30' : 'border-primary'}>
+                        <CardContent className="p-4 space-y-3">
+                          <div className="space-y-1">
+                            <p className="text-sm font-medium">
+                              {notification.data.from_user_name} compartilhou um pacote
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {notification.data.package_name}
+                            </p>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              className="flex-1 gap-2"
+                              onClick={() => {
+                                handleAcceptShare(notification.id, notification.data);
+                                setShowNotifications(false);
+                              }}
+                            >
+                              <Check className="h-4 w-4" />
+                              Adicionar
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="flex-1"
+                              onClick={() => handleRejectShare(notification.id, notification.data)}
+                            >
+                              Recusar
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  }
+                  return null;
+                })
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Modal de detalhes do pacote */}
       {viewingPackage && (
