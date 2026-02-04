@@ -253,20 +253,33 @@ export default function Packages() {
     if (!user?.id) return;
 
     try {
-      console.log('Share data recebido:', shareData);
+      console.log('Share data raw:', shareData, typeof shareData);
+      
+      // Parse se for string JSON
+      let parsedData = shareData;
+      if (typeof shareData === 'string') {
+        parsedData = JSON.parse(shareData);
+      }
+      
+      console.log('Share data parsed:', parsedData);
       
       // Extrair o package_id de shareData
-      const packageId = shareData?.package_id;
+      const packageId = parsedData?.package_id;
+      console.log('Package ID extraído:', packageId);
+      
       if (!packageId) {
         throw new Error('ID do pacote não encontrado na notificação');
       }
 
       // Buscar pacote compartilhado
+      console.log('Buscando pacote com ID:', packageId);
       const { data: packageData, error: fetchError } = await supabase
         .from('packages')
         .select('*, package_procedures(procedure_code)')
         .eq('id', packageId);
 
+      console.log('Resultado da busca:', { packageData, fetchError });
+      
       if (fetchError) throw fetchError;
       if (!packageData || packageData.length === 0) {
         throw new Error(`Pacote com ID ${packageId} não encontrado`);
