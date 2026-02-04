@@ -24,11 +24,12 @@ export function useUsers() {
         return;
       }
 
-      console.log('Usuários carregados:', data);
+      console.log('Usuários carregados do banco:', data);
       // Remove duplicates by id
       const uniqueUsers = data ? data.filter((u, index, self) => 
         index === self.findIndex((t) => t.id === u.id)
       ) : [];
+      console.log('Usuários após deduplicação:', uniqueUsers);
       setUsers(uniqueUsers);
     } catch (error) {
       console.error('Erro ao carregar usuários:', error);
@@ -39,7 +40,7 @@ export function useUsers() {
 
   useEffect(() => {
     fetchUsers();
-  }, [fetchUsers]);
+  }, []);
 
   return { users, loading, refetch: fetchUsers };
 }
