@@ -253,18 +253,27 @@ export default function Packages() {
     if (!user?.id) return;
 
     try {
+      console.log('Share data recebido:', shareData);
+      
+      // Extrair o package_id de shareData
+      const packageId = shareData?.package_id;
+      if (!packageId) {
+        throw new Error('ID do pacote não encontrado na notificação');
+      }
+
       // Buscar pacote compartilhado
       const { data: packageData, error: fetchError } = await supabase
         .from('packages')
         .select('*, package_procedures(procedure_code)')
-        .eq('id', shareData.package_id);
+        .eq('id', packageId);
 
       if (fetchError) throw fetchError;
       if (!packageData || packageData.length === 0) {
-        throw new Error('Pacote não encontrado');
+        throw new Error(`Pacote com ID ${packageId} não encontrado`);
       }
 
       const sharedPkg = packageData[0];
+      console.log('Pacote encontrado:', sharedPkg);
 
       // Criar cópia do pacote para o usuário
       const payload = {
@@ -279,7 +288,7 @@ export default function Packages() {
       await supabase
         .from('shared_packages')
         .update({ status: 'accepted' })
-        .eq('package_id', shareData.package_id)
+        .eq('package_id', packageId)
         .eq('to_user_id', user.id);
 
       // Deletar notificação
