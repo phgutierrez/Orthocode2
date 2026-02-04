@@ -36,6 +36,14 @@ export default function Packages() {
   const [activeTab, setActiveTab] = useState('list');
   const [showNotifications, setShowNotifications] = useState(false);
 
+  // Filtrar usuários removendo duplicatas e o usuário atual
+  const availableUsers = useMemo(() => {
+    const uniqueUsers = users.filter((u, index, self) => 
+      index === self.findIndex((t) => t.id === u.id)
+    );
+    return uniqueUsers.filter(u => u.id !== user?.id);
+  }, [users, user?.id]);
+
   const favoriteProcedures = useMemo(() => {
     if (!Array.isArray(favorites) || !Array.isArray(procedures)) {
       return [];
@@ -424,21 +432,19 @@ export default function Packages() {
                                   </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="max-h-60 overflow-y-auto">
-                                  {users
-                                    .filter(u => u.id !== user?.id)
-                                    .map(u => (
-                                      <DropdownMenuItem
-                                        key={u.id}
-                                        onClick={() => handleSharePackage(pkg.id, u.id)}
-                                      >
-                                        {u.name || u.email}
-                                      </DropdownMenuItem>
-                                    ))}
+                                  {availableUsers.map(u => (
+                                    <DropdownMenuItem
+                                      key={u.id}
+                                      onClick={() => handleSharePackage(pkg.id, u.id)}
+                                    >
+                                      {u.name || u.email}
+                                    </DropdownMenuItem>
+                                  ))}
                                   {users.length === 0 ? (
                                     <DropdownMenuItem disabled>
                                       Carregando usuários...
                                     </DropdownMenuItem>
-                                  ) : users.filter(u => u.id !== user?.id).length === 0 ? (
+                                  ) : availableUsers.length === 0 ? (
                                     <DropdownMenuItem disabled>
                                       Nenhum outro usuário cadastrado
                                     </DropdownMenuItem>
