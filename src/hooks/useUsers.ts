@@ -24,6 +24,7 @@ export function useUsers() {
         return;
       }
 
+      console.log('Usuários carregados:', data);
       setUsers(data || []);
     } catch (error) {
       console.error('Erro ao carregar usuários:', error);

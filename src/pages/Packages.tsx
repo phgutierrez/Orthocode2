@@ -434,11 +434,15 @@ export default function Packages() {
                                         {u.name || u.email}
                                       </DropdownMenuItem>
                                     ))}
-                                  {users.filter(u => u.id !== user?.id).length === 0 && (
+                                  {users.length === 0 ? (
                                     <DropdownMenuItem disabled>
-                                      Nenhum usuário disponível
+                                      Carregando usuários...
                                     </DropdownMenuItem>
-                                  )}
+                                  ) : users.filter(u => u.id !== user?.id).length === 0 ? (
+                                    <DropdownMenuItem disabled>
+                                      Nenhum outro usuário cadastrado
+                                    </DropdownMenuItem>
+                                  ) : null}
                                 </DropdownMenuContent>
                               </DropdownMenu>
                               <Button 
