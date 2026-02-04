@@ -254,13 +254,17 @@ export default function Packages() {
 
     try {
       // Buscar pacote compartilhado
-      const { data: sharedPkg, error: fetchError } = await supabase
+      const { data: packageData, error: fetchError } = await supabase
         .from('packages')
         .select('*, package_procedures(procedure_code)')
-        .eq('id', shareData.package_id)
-        .single();
+        .eq('id', shareData.package_id);
 
       if (fetchError) throw fetchError;
+      if (!packageData || packageData.length === 0) {
+        throw new Error('Pacote não encontrado');
+      }
+
+      const sharedPkg = packageData[0];
 
       // Criar cópia do pacote para o usuário
       const payload = {
