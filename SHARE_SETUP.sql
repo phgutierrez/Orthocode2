@@ -47,6 +47,10 @@ CREATE POLICY "Users can view their notifications"
 ON public.notifications FOR SELECT
 USING (auth.uid() = user_id);
 
+CREATE POLICY "Users can create notifications for others"
+ON public.notifications FOR INSERT
+WITH CHECK (true);
+
 CREATE POLICY "Users can update their notifications"
 ON public.notifications FOR UPDATE
 USING (auth.uid() = user_id);

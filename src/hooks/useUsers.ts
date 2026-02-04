@@ -25,7 +25,11 @@ export function useUsers() {
       }
 
       console.log('Usuários carregados:', data);
-      setUsers(data || []);
+      // Remove duplicates by id
+      const uniqueUsers = data ? data.filter((u, index, self) => 
+        index === self.findIndex((t) => t.id === u.id)
+      ) : [];
+      setUsers(uniqueUsers);
     } catch (error) {
       console.error('Erro ao carregar usuários:', error);
     } finally {
