@@ -36,6 +36,7 @@ export interface Procedure {
   values: ProcedureValue;
   region: AnatomicRegion;
   type: ProcedureType;
+  porte: string;
   anestheticPort: string;
   uco: number;
   surgicalTime: number | null; // in minutes

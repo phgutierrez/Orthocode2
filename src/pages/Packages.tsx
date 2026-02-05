@@ -49,6 +49,24 @@ export default function Packages() {
     return uniqueUsers.filter(u => u.id !== user?.id);
   }, [users, user?.id]);
 
+  const getPorteScore = (porte?: string) => {
+    if (!porte) return -1;
+    const match = String(porte).trim().toUpperCase().match(/(\d+)([A-Z])?/);
+    if (!match) return -1;
+    const num = Number.parseInt(match[1], 10);
+    const letter = match[2] ? match[2].charCodeAt(0) - 64 : 0;
+    return num * 100 + letter;
+  };
+
+  const sortProceduresByPorte = (list: typeof procedures) => {
+    return [...list].sort((a, b) => {
+      const scoreA = getPorteScore(a?.porte);
+      const scoreB = getPorteScore(b?.porte);
+      if (scoreA !== scoreB) return scoreB - scoreA;
+      return (a?.name || '').localeCompare(b?.name || '');
+    });
+  };
+
   const filteredProcedures = useMemo(() => {
     if (!Array.isArray(procedures)) return [];
     
@@ -93,9 +111,11 @@ export default function Packages() {
 
   const viewingPackage = viewingPackageId ? packages.find(pkg => pkg.id === viewingPackageId) : null;
   const viewingProcedures = viewingPackage
-    ? viewingPackage.procedureIds
-        .map(procId => procedures.find(item => item.id === procId))
-        .filter(Boolean)
+    ? sortProceduresByPorte(
+        viewingPackage.procedureIds
+          .map(procId => procedures.find(item => item.id === procId))
+          .filter(Boolean) as typeof procedures
+      )
     : [];
 
   const resetForm = () => {
@@ -183,14 +203,16 @@ export default function Packages() {
     const pkg = packages.find(item => item.id === id);
     if (!pkg) return;
 
-    const proceduresList = pkg.procedureIds
-      .map(procId => procedures.find(item => item.id === procId))
-      .filter(Boolean);
+    const proceduresList = sortProceduresByPorte(
+      pkg.procedureIds
+        .map(procId => procedures.find(item => item.id === procId))
+        .filter(Boolean) as typeof procedures
+    );
 
     const formatted = [
       `${pkg.name}`,
       '',
-      ...proceduresList.map(proc => `- ${proc!.codes.tuss} - ${proc!.name}`),
+      ...proceduresList.map(proc => `- ${proc!.codes.tuss} - ${proc!.name} (Porte ${proc!.porte || '-'})`),
     ].join('\n');
 
     try {
@@ -432,9 +454,11 @@ export default function Packages() {
               ) : (
                 <div className="space-y-3">
                   {filteredPackages.map((pkg) => {
-                    const proceduresList = pkg.procedureIds
-                      .map(procId => procedures.find(item => item.id === procId))
-                      .filter(Boolean);
+                    const proceduresList = sortProceduresByPorte(
+                      pkg.procedureIds
+                        .map(procId => procedures.find(item => item.id === procId))
+                        .filter(Boolean) as typeof procedures
+                    );
 
                     return (
                       <Card
@@ -510,7 +534,7 @@ export default function Packages() {
                           <div className="flex flex-wrap gap-1">
                             {proceduresList.slice(0, 3).map((procedure) => (
                               <Badge key={procedure!.id} variant="secondary" className="text-xs">
-                                {procedure!.codes.tuss}
+                                {procedure!.codes.tuss} · Porte {procedure!.porte || '-'}
                               </Badge>
                             ))}
                             {proceduresList.length > 3 && (
@@ -803,6 +827,13 @@ export default function Packages() {
                               {procedure!.codes.tuss && (
                                 <p className="text-xs text-muted-foreground">
                                   <span className="font-medium">TUSS:</span> {procedure!.codes.tuss}
+                                  <span className="mx-2">•</span>
+                                  <span className="font-medium">Porte:</span> {procedure!.porte || '-'}
+                                </p>
+                              )}
+                              {procedure!.anestheticPort && procedure!.anestheticPort !== '0' && (
+                                <p className="text-xs text-muted-foreground">
+                                  <span className="font-medium">Porte Anestésico:</span> {procedure!.anestheticPort}
                                 </p>
                               )}
                               {procedure!.codes.cbhpm && (

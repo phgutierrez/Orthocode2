@@ -5,10 +5,45 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Read the Excel file
-const workbook = XLSX.readFile(path.join(__dirname, '../tuss-data.xls'));
+// Read the Excel file (TUSS)
+const workbook = XLSX.readFile(path.join(__dirname, '../docs/setup/tuss-data.xls'));
 const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 const data = XLSX.utils.sheet_to_json(worksheet);
+
+// Read CBHPM file for Porte information
+const cbhpmWorkbook = XLSX.readFile(path.join(__dirname, '../docs/setup/tabela-cbhpm-5.xlsx'));
+const cbhpmMap = buildCbhpmMap(cbhpmWorkbook);
+
+function buildCbhpmMap(workbook) {
+  const map = new Map();
+  const sheetNames = workbook.SheetNames.slice(0, 2);
+
+  sheetNames.forEach((sheetName) => {
+    const sheet = workbook.Sheets[sheetName];
+    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false });
+
+    rows.forEach((row) => {
+      const code = String(row?.[0] || '').trim();
+      if (!/^[0-9]{6,10}$/.test(code)) return;
+
+      const name = String(row?.[1] || '').trim();
+      const porteIndex = String(row?.[2] || row?.[4] || '').trim();
+      const porteAnest = String(row?.[9] || '').trim();
+
+      if (!porteIndex && !porteAnest) return;
+
+      const existing = map.get(code) || {};
+      map.set(code, {
+        code,
+        name: name || existing.name || '',
+        porteIndex: porteIndex || existing.porteIndex || '',
+        porteAnest: porteAnest || existing.porteAnest || '',
+      });
+    });
+  });
+
+  return map;
+}
 
 // Map columns based on the structure provided
 const procedures = data.map((row, index) => {
@@ -22,11 +57,13 @@ const procedures = data.map((row, index) => {
     return null;
   }
 
+  const cbhpmInfo = cbhpmMap.get(codigoTuss);
+
   return {
     id: `tuss-${index}`,
     name: nome,
     codes: {
-      cbhpm: '', // Will be empty for now
+      cbhpm: cbhpmInfo ? codigoTuss : '',
       tuss: codigoTuss,
       sus: '', // Will be empty for now
     },
@@ -37,7 +74,8 @@ const procedures = data.map((row, index) => {
     },
     region: mapRegion(capitulo),
     type: 'cirurgico',
-    anestheticPort: '0',
+    porte: cbhpmInfo?.porteIndex || '',
+    anestheticPort: cbhpmInfo?.porteAnest || '0',
     uco: 0,
     surgicalTime: null,
     description: `${subgrupo} - ${grupo}`.trim(),

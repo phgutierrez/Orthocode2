@@ -73,8 +73,8 @@ ${procedure.name}
 
 Código TUSS: ${procedure.codes.tuss}
 
-Porte Anestésico: ${procedure.anestheticPort}
-UCO: ${procedure.uco}
+Porte: ${procedure.porte || '-'}
+Porte Anestésico: ${procedure.anestheticPort || '-'}
 ${procedure.surgicalTime ? `Tempo Cirúrgico: ${procedure.surgicalTime} min` : ''}
 
 CIDs: ${procedure.cids.join(', ')}
@@ -180,12 +180,12 @@ ${procedure.description}
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-3 bg-muted rounded-lg text-center">
-                  <p className="text-sm text-muted-foreground">Porte Anestésico</p>
-                  <p className="text-xl font-bold text-foreground">{procedure.anestheticPort}</p>
+                  <p className="text-sm text-muted-foreground">Porte</p>
+                  <p className="text-xl font-bold text-foreground">{procedure.porte || '-'}</p>
                 </div>
                 <div className="p-3 bg-muted rounded-lg text-center">
-                  <p className="text-sm text-muted-foreground">UCO</p>
-                  <p className="text-xl font-bold text-foreground">{procedure.uco}</p>
+                  <p className="text-sm text-muted-foreground">Porte Anestésico</p>
+                  <p className="text-xl font-bold text-foreground">{procedure.anestheticPort || '-'}</p>
                 </div>
               </div>
               
