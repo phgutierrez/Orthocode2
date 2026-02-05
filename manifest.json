@@ -1,6 +1,6 @@
 {
-  "name": "TussPack - Códigos TUSS",
-  "short_name": "TussPack",
+  "name": "Pacote TUSS - Gerenciador de Procedimentos Médicos",
+  "short_name": "Pacote TUSS",
   "description": "Busque e visualize códigos de procedimentos médicos da tabela TUSS",
   "start_url": "/",
   "display": "standalone",

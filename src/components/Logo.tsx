@@ -32,11 +32,11 @@ export function Logo({ size = 'md', showText = true }: LogoProps) {
       {showText && (
         <div className="flex flex-col">
           <span className={`${textClasses[size]} font-bold text-white leading-tight`}>
-            TussPack
+            Pacote TUSS
           </span>
           {size !== 'sm' && (
             <span className="text-xs text-white/80">
-              Códigos TUSS
+              Gerenciador de Procedimentos
             </span>
           )}
         </div>
