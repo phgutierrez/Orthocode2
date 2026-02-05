@@ -8,7 +8,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Read the Excel file (TUSS)
 const workbook = XLSX.readFile(path.join(__dirname, '../docs/setup/tuss-data.xls'));
 const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-const data = XLSX.utils.sheet_to_json(worksheet);
+
+// Read as array format to preserve indices
+const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false });
 
 // Read CBHPM file for Porte information
 const cbhpmWorkbook = XLSX.readFile(path.join(__dirname, '../docs/setup/tabela-cbhpm-5.xlsx'));
@@ -45,13 +47,49 @@ function buildCbhpmMap(workbook) {
   return map;
 }
 
+// Map procedure type based on which context columns have values
+function mapProcedureType(row) {
+  // Indices: 8=AMB, 9=HCO, 10=HSO, 11=PAC, 12=D.UT
+  const amb = String(row?.[8] || '').trim();
+  const hco = String(row?.[9] || '').trim();
+  const hso = String(row?.[10] || '').trim();
+  const pac = String(row?.[11] || '').trim();
+  const dut = String(row?.[12] || '').trim();
+
+  // Priority: if D.UT has value → diagnóstico
+  if (dut) return 'diagnostico';
+  
+  // If HCO, HSO, PAC → cirurgico
+  if (hco || hso || pac) return 'cirurgico';
+  
+  // If AMB → ambulatorial
+  if (amb) return 'ambulatorial';
+  
+  // Default
+  return 'ambulatorial';
+}
+
+function mapRegion(capitulo) {
+  const cap = capitulo.toLowerCase();
+  if (cap.includes('coluna') || cap.includes('vertebral')) return 'coluna';
+  if (cap.includes('ombro')) return 'ombro';
+  if (cap.includes('joelho') || cap.includes('fêmur')) return 'joelho';
+  if (cap.includes('quadril') || cap.includes('pelve')) return 'quadril';
+  if (cap.includes('tornozelo') || cap.includes('pé') || cap.includes('pe ')) return 'tornozelo-pe';
+  if (cap.includes('mão') || cap.includes('mao ') || cap.includes('dedo') || cap.includes('pulso')) return 'mao-punho';
+  if (cap.includes('cotovelo') || cap.includes('antebraço')) return 'cotovelo';
+  if (cap.includes('membro inferior')) return 'membros-inferiores';
+  if (cap.includes('membro superior')) return 'membros-superiores';
+  return 'outros';
+}
+
 // Map columns based on the structure provided
-const procedures = data.map((row, index) => {
-  const codigoTuss = String(row['__EMPTY'] || '').trim();
-  const nome = String(row['__EMPTY_1'] || '').trim();
-  const subgrupo = String(row['__EMPTY_3'] || '').trim();
-  const grupo = String(row['__EMPTY_4'] || '').trim();
-  const capitulo = String(row['__EMPTY_5'] || '').trim();
+// rawData is array format, starting from row 3 (skip headers)
+const procedures = rawData.slice(3).map((row, index) => {
+  const codigoTuss = String(row?.[0] || '').trim();
+  const nome = String(row?.[1] || '').trim();
+  const subgrupo = String(row?.[4] || '').trim();
+  const grupo = String(row?.[5] || '').trim();
 
   if (!codigoTuss || !nome || codigoTuss === 'Código Tab 22') {
     return null;
@@ -72,8 +110,8 @@ const procedures = data.map((row, index) => {
       tuss: 0,
       sus: 0,
     },
-    region: mapRegion(capitulo),
-    type: 'cirurgico',
+    region: mapRegion(nome),
+    type: mapProcedureType(row),
     porte: cbhpmInfo?.porteIndex || '',
     anestheticPort: cbhpmInfo?.porteAnest || '0',
     uco: 0,
@@ -83,18 +121,6 @@ const procedures = data.map((row, index) => {
     keywords: [codigoTuss, nome.toLowerCase(), grupo.toLowerCase(), subgrupo.toLowerCase()],
   };
 }).filter(Boolean);
-
-function mapRegion(capitulo) {
-  const cap = capitulo.toLowerCase();
-  if (cap.includes('coluna') || cap.includes('vertebral')) return 'coluna';
-  if (cap.includes('ombro')) return 'ombro';
-  if (cap.includes('joelho') || cap.includes('fêmur')) return 'joelho';
-  if (cap.includes('quadril') || cap.includes('pelve')) return 'quadril';
-  if (cap.includes('tornozelo') || cap.includes('pé')) return 'pe';
-  if (cap.includes('mão') || cap.includes('dedo') || cap.includes('pulso')) return 'mao';
-  if (cap.includes('cotovelo') || cap.includes('antebraço')) return 'cotovelo';
-  return 'outros';
-}
 
 // Write to JSON file for public folder
 const jsonOutput = JSON.stringify(procedures, null, 2);
