@@ -7,36 +7,23 @@ export async function loadProcedures(): Promise<Procedure[]> {
     return cachedProcedures;
   }
   
-  try {
-    const response = await fetch('/data/procedures.json');
-    if (!response.ok) {
-      throw new Error(`Failed to load procedures: ${response.status}`);
-    }
-    const data = await response.json();
-    if (!Array.isArray(data)) {
-      throw new Error('Procedures data is not an array');
-    }
-    cachedProcedures = data;
-    return cachedProcedures;
-  } catch (error) {
-    console.error('Error loading procedures:', error);
-    cachedProcedures = [];
-    return [];
-  }
+  const response = await fetch('/data/procedures.json');
+  cachedProcedures = await response.json();
+  return cachedProcedures;
 }
 
-export function searchProcedures(procedures: Procedure[], query: string = '', filters?: { region?: string; type?: string }) {
+export function searchProcedures(procedures: Procedure[], query: string, filters?: { region?: string; type?: string }) {
   let results = procedures;
 
-  if (query && query.trim()) {
+  if (query.trim()) {
     const q = query.toLowerCase();
     results = results.filter((proc) => {
       return (
-        proc.name?.toLowerCase().includes(q) ||
-        proc.codes?.tuss?.toLowerCase().includes(q) ||
-        proc.codes?.cbhpm?.toLowerCase().includes(q) ||
-        proc.codes?.sus?.toLowerCase().includes(q) ||
-        proc.keywords?.some((kw) => kw?.toLowerCase().includes(q))
+        proc.name.toLowerCase().includes(q) ||
+        proc.codes.tuss.toLowerCase().includes(q) ||
+        proc.codes.cbhpm.toLowerCase().includes(q) ||
+        proc.codes.sus.toLowerCase().includes(q) ||
+        proc.keywords.some((kw) => kw.toLowerCase().includes(q))
       );
     });
   }

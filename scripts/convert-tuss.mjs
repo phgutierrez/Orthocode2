@@ -27,8 +27,8 @@ function buildCbhpmMap(workbook) {
       if (!/^[0-9]{6,10}$/.test(code)) return;
 
       const name = String(row?.[1] || '').trim();
-      const porteIndex = String(row?.[2] || row?.[4] || '').trim();
-      const porteAnest = String(row?.[9] || '').trim();
+      const porteIndex = String(row?.[4] || '').trim(); // Coluna E
+      const porteAnest = String(row?.[9] || '').trim(); // Coluna J
 
       if (!porteIndex && !porteAnest) return;
 
