@@ -48,7 +48,30 @@ function buildCbhpmMap(workbook) {
 }
 
 // Map procedure type based on which context columns have values
-function mapProcedureType(row) {
+function mapProcedureType(row, nome) {
+  // FIRST: Check if it's clearly a diagnostic procedure by name
+  const n = nome.toLowerCase();
+  
+  // Diagnóstico por características do nome
+  if (n.includes('radiografia') || n.includes('radiológico') || n.includes('rx -') ||
+      n.includes('raio-x') || n.includes('ultrassom') || n.includes('ultrassonografia') ||
+      n.includes('eletrocardiografia') || n.includes('ecografia') ||
+      n.includes('eletroencefalografia') || n.includes('eletroneuromiografia') ||
+      n.includes('ressonância magnética') || n.includes('ressonancia magnetica') ||
+      n.includes('tomografia') || n.includes('pet-ct') ||
+      n.includes('angiorradiologia') || n.includes('angiografia') ||
+      n.includes('endoscopia') || n.includes('colonoscopia') ||
+      n.includes('ecocardiografia') || n.includes('teste ergométrico') ||
+      n.includes('holter') || n.includes('mapa') || n.includes('espirometria') ||
+      n.includes('audiometria') || n.includes('videonistagmografia') ||
+      n.includes('teste vestibular') || n.includes('oculomotor') ||
+      // Procedimentos orientados/guiados por imagem diagnóstica
+      (n.includes('orientada por rx') || n.includes('orientada por us') ||
+       n.includes('orientada por tc') || n.includes('orientada por ecografia'))) {
+    return 'diagnostico';
+  }
+
+  // THEN: Use column-based classification for other procedures
   // Indices: 8=AMB, 9=HCO, 10=HSO, 11=PAC, 12=D.UT
   const amb = String(row?.[8] || '').trim();
   const hco = String(row?.[9] || '').trim();
@@ -59,7 +82,7 @@ function mapProcedureType(row) {
   // Priority: if D.UT has value → diagnóstico
   if (dut) return 'diagnostico';
   
-  // If HCO, HSO, PAC → cirurgico
+  // If HCO, HSO, PAC → cirurgico (but not if already classified as diagnostico above)
   if (hco || hso || pac) return 'cirurgico';
   
   // If AMB → ambulatorial
@@ -203,7 +226,7 @@ const procedures = rawData.slice(3).map((row, index) => {
       sus: 0,
     },
     region: mapRegion(nome),
-    type: mapProcedureType(row),
+    type: mapProcedureType(row, nome),
     porte: cbhpmInfo?.porteIndex || '',
     anestheticPort: cbhpmInfo?.porteAnest || '0',
     uco: 0,
