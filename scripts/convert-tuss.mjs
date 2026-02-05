@@ -69,17 +69,109 @@ function mapProcedureType(row) {
   return 'ambulatorial';
 }
 
-function mapRegion(capitulo) {
-  const cap = capitulo.toLowerCase();
-  if (cap.includes('coluna') || cap.includes('vertebral')) return 'coluna';
-  if (cap.includes('ombro')) return 'ombro';
-  if (cap.includes('joelho') || cap.includes('fêmur')) return 'joelho';
-  if (cap.includes('quadril') || cap.includes('pelve')) return 'quadril';
-  if (cap.includes('tornozelo') || cap.includes('pé') || cap.includes('pe ')) return 'tornozelo-pe';
-  if (cap.includes('mão') || cap.includes('mao ') || cap.includes('dedo') || cap.includes('pulso')) return 'mao-punho';
-  if (cap.includes('cotovelo') || cap.includes('antebraço')) return 'cotovelo';
-  if (cap.includes('membro inferior')) return 'membros-inferiores';
-  if (cap.includes('membro superior')) return 'membros-superiores';
+function mapRegion(nome) {
+  const n = nome.toLowerCase();
+  
+  // === COLUNA VERTEBRAL ===
+  if (n.includes('coluna') || n.includes('vertebral') || n.includes('vértebra') || 
+      n.includes('disco') || n.includes('espinha') || n.includes('dorsal') ||
+      n.includes('cervical') || n.includes('torácica') || n.includes('lombar') ||
+      n.includes('sacra') || n.includes('coccígea') || n.includes('medula espinhal')) {
+    return 'coluna';
+  }
+
+  // === QUADRIL ===
+  // Fêmur proximal, pelve, articulação coxofemoral
+  // DEVE VIR ANTES de outras buscas para evitar falsos positivos
+  if (n.includes('quadril') || n.includes('pelve') || n.includes('pélvis') ||
+      (n.includes('fêmur') && (n.includes('proximal') || n.includes('cabeça') || n.includes('colo'))) ||
+      (n.includes('femur') && (n.includes('proximal') || n.includes('cabeça') || n.includes('colo'))) ||
+      n.includes('articulação coxofemoral') || n.includes('coxa') ||
+      n.includes('ísquio') || n.includes('isquio') || n.includes('púbis') || n.includes('pubis') ||
+      n.includes('ilíaco') || n.includes('iliaco')) {
+    return 'quadril';
+  }
+
+  // === OMBRO ===
+  // Úmero proximal, articulação do ombro, clavícula proximal
+  if (n.includes('ombro') || n.includes('articulação do ombro') ||
+      (n.includes('úmero') && (n.includes('proximal') || n.includes('cabeça') || n.includes('tuberosidade'))) ||
+      (n.includes('umero') && (n.includes('proximal') || n.includes('cabeça') || n.includes('tuberosidade'))) ||
+      (n.includes('clavícula') && (n.includes('proximal') || n.includes('articul'))) ||
+      (n.includes('clavicula') && (n.includes('proximal') || n.includes('articul'))) ||
+      n.includes('escapula') || n.includes('escápula') || n.includes('articulação acromioclavicular')) {
+    return 'ombro';
+  }
+
+  // === COTOVELO ===
+  // Úmero distal, rádio proximal, ulna proximal, articulação do cotovelo
+  if (n.includes('cotovelo') || n.includes('articulação do cotovelo') ||
+      (n.includes('úmero') && (n.includes('distal') || n.includes('epicôndilo'))) ||
+      (n.includes('umero') && (n.includes('distal') || n.includes('epicondilo'))) ||
+      (n.includes('rádio') && n.includes('proximal')) ||
+      (n.includes('radio') && n.includes('proximal')) ||
+      (n.includes('ulna') && n.includes('proximal')) ||
+      n.includes('radioulnar') || n.includes('radioulnares') ||
+      n.includes('antebraço') || n.includes('antebraco')) {
+    return 'cotovelo';
+  }
+
+  // === MÃO E PUNHO ===
+  // Rádio distal, ulna distal, carpo, metacarpos, falanges
+  if ((n.includes('mão') || n.includes('mao ')) && !n.includes('pele') ||
+      (n.includes('punho') && !n.includes('repouso')) ||
+      (n.includes('rádio') && n.includes('distal')) ||
+      (n.includes('radio') && n.includes('distal')) ||
+      (n.includes('ulna') && n.includes('distal')) ||
+      n.includes('carpo') || n.includes('carpiana') ||
+      n.includes('metacarpo') || n.includes('falange') ||
+      (n.includes('dedos') || n.includes('dedo')) && !n.includes('pé') && !n.includes('pe ') ||
+      n.includes('escafoide') || n.includes('semilunar') || n.includes('piramidal') ||
+      n.includes('pisiforme') || n.includes('trapézio') || n.includes('trapezoide') ||
+      n.includes('trapezio') || n.includes('capitato') || n.includes('hamato')) {
+    return 'mao-punho';
+  }
+
+  // === JOELHO ===
+  // Fêmur distal, tíbia proximal, fíbula, rótula
+  if (n.includes('joelho') || n.includes('articulação do joelho') ||
+      (n.includes('fêmur') && (n.includes('distal') || n.includes('côndilo'))) ||
+      (n.includes('femur') && (n.includes('distal') || n.includes('condilo'))) ||
+      (n.includes('tíbia') && (n.includes('proximal') || n.includes('platô') || n.includes('plato'))) ||
+      (n.includes('tibia') && (n.includes('proximal') || n.includes('plato'))) ||
+      n.includes('fíbula') || n.includes('fibula') ||
+      n.includes('rótula') || n.includes('rotula') ||
+      n.includes('menisco') || n.includes('ligamento cruzado') ||
+      n.includes('ligamento colateral')) {
+    return 'joelho';
+  }
+
+  // === TORNOZELO E PÉ ===
+  // Tíbia distal, fíbula distal, tarso, metatarsos, falanges do pé
+  if (n.includes('tornozelo') ||
+      (n.includes('tíbia') && n.includes('distal')) ||
+      (n.includes('tibia') && n.includes('distal')) ||
+      (n.includes('fíbula') && n.includes('distal')) ||
+      (n.includes('fibula') && n.includes('distal')) ||
+      n.includes('tarso') || n.includes('calcâneo') || n.includes('calcaneo') ||
+      n.includes('astrágalo') || n.includes('astragalo') ||
+      n.includes('metatarso') || n.includes('metatarsal') ||
+      n.includes('hálux') || n.includes('halux') ||
+      (n.includes('pé ') || n.includes('pé-')) && !n.includes('pele')) {
+    return 'tornozelo-pe';
+  }
+
+  // === MEMBROS SUPERIORES (genérico) ===
+  if (n.includes('membro superior')) {
+    return 'membros-superiores';
+  }
+
+  // === MEMBROS INFERIORES (genérico) ===
+  if (n.includes('membro inferior')) {
+    return 'membros-inferiores';
+  }
+
+  // Default
   return 'outros';
 }
 

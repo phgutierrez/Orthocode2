@@ -3204,7 +3204,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "1B",
     "anestheticPort": "0",
@@ -4156,7 +4156,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "mao-punho",
+    "region": "outros",
     "type": "ambulatorial",
     "porte": "3C",
     "anestheticPort": "0",
@@ -6872,7 +6872,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "mao-punho",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "4C",
     "anestheticPort": "0",
@@ -6900,7 +6900,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "mao-punho",
+    "region": "outros",
     "type": "diagnostico",
     "porte": "4C",
     "anestheticPort": "0",
@@ -7012,7 +7012,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "mao-punho",
+    "region": "outros",
     "type": "diagnostico",
     "porte": "4C",
     "anestheticPort": "0",
@@ -7768,7 +7768,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "1C",
     "anestheticPort": "0",
@@ -7992,7 +7992,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "mao-punho",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "4C",
     "anestheticPort": "0",
@@ -8020,7 +8020,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "mao-punho",
+    "region": "outros",
     "type": "diagnostico",
     "porte": "4C",
     "anestheticPort": "0",
@@ -8076,7 +8076,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "mao-punho",
+    "region": "outros",
     "type": "diagnostico",
     "porte": "4C",
     "anestheticPort": "0",
@@ -16196,7 +16196,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "6A",
     "anestheticPort": "2",
@@ -16224,7 +16224,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9A",
     "anestheticPort": "4",
@@ -16252,7 +16252,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9A",
     "anestheticPort": "4",
@@ -16280,7 +16280,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9A",
     "anestheticPort": "4",
@@ -16308,7 +16308,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9A",
     "anestheticPort": "4",
@@ -16336,7 +16336,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9A",
     "anestheticPort": "4",
@@ -16364,7 +16364,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9A",
     "anestheticPort": "4",
@@ -16392,7 +16392,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9A",
     "anestheticPort": "4",
@@ -16420,7 +16420,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9C",
     "anestheticPort": "5",
@@ -16448,7 +16448,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9C",
     "anestheticPort": "5",
@@ -16476,7 +16476,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "7C",
     "anestheticPort": "3",
@@ -16504,7 +16504,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "7C",
     "anestheticPort": "3",
@@ -16532,7 +16532,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "7C",
     "anestheticPort": "3",
@@ -16560,7 +16560,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "7C",
     "anestheticPort": "3",
@@ -16588,7 +16588,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "7C",
     "anestheticPort": "3",
@@ -16616,7 +16616,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "7C",
     "anestheticPort": "3",
@@ -16644,7 +16644,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "7C",
     "anestheticPort": "3",
@@ -16728,7 +16728,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "7B",
     "anestheticPort": "3",
@@ -16812,7 +16812,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "11A",
     "anestheticPort": "5",
@@ -16868,7 +16868,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9C",
     "anestheticPort": "5",
@@ -16952,7 +16952,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9A",
     "anestheticPort": "5",
@@ -16980,7 +16980,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9B",
     "anestheticPort": "5",
@@ -17036,7 +17036,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "7C",
     "anestheticPort": "4",
@@ -18352,7 +18352,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "tornozelo-pe",
     "type": "cirurgico",
     "porte": "4B",
     "anestheticPort": "3",
@@ -19304,7 +19304,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "tornozelo-pe",
     "type": "cirurgico",
     "porte": "7C",
     "anestheticPort": "3",
@@ -25100,7 +25100,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10C",
     "anestheticPort": "5",
@@ -25296,7 +25296,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10B",
     "anestheticPort": "5",
@@ -25324,7 +25324,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10A",
     "anestheticPort": "4",
@@ -25352,7 +25352,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10A",
     "anestheticPort": "5",
@@ -25436,7 +25436,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "7C",
     "anestheticPort": "2",
@@ -25800,7 +25800,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "ambulatorial",
     "porte": "12A",
     "anestheticPort": "5",
@@ -25856,7 +25856,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9C",
     "anestheticPort": "5",
@@ -26668,7 +26668,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "8A",
     "anestheticPort": "4",
@@ -26696,7 +26696,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "8C",
     "anestheticPort": "4",
@@ -27200,7 +27200,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "12C",
     "anestheticPort": "6",
@@ -27228,7 +27228,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "ombro",
     "type": "cirurgico",
     "porte": "12C",
     "anestheticPort": "6",
@@ -27424,7 +27424,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "ombro",
     "type": "cirurgico",
     "porte": "12B",
     "anestheticPort": "6",
@@ -27592,7 +27592,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "12C",
     "anestheticPort": "6",
@@ -27788,7 +27788,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "12B",
     "anestheticPort": "6",
@@ -27928,7 +27928,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "12B",
     "anestheticPort": "6",
@@ -27984,7 +27984,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "12B",
     "anestheticPort": "5",
@@ -28348,7 +28348,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "quadril",
     "type": "cirurgico",
     "porte": "12C",
     "anestheticPort": "6",
@@ -28376,7 +28376,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "quadril",
     "type": "cirurgico",
     "porte": "12C",
     "anestheticPort": "6",
@@ -28488,7 +28488,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "joelho",
     "type": "cirurgico",
     "porte": "13A",
     "anestheticPort": "6",
@@ -28908,7 +28908,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "membros-inferiores",
+    "region": "quadril",
     "type": "cirurgico",
     "porte": "13A",
     "anestheticPort": "6",
@@ -29048,7 +29048,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "13A",
     "anestheticPort": "6",
@@ -30532,7 +30532,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "8B",
     "anestheticPort": "3",
@@ -30560,7 +30560,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "6A",
     "anestheticPort": "3",
@@ -30812,7 +30812,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9A",
     "anestheticPort": "4",
@@ -30840,7 +30840,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9C",
     "anestheticPort": "5",
@@ -31148,7 +31148,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "8B",
     "anestheticPort": "2",
@@ -31260,7 +31260,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10B",
     "anestheticPort": "5",
@@ -31372,7 +31372,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "ambulatorial",
     "porte": "9A",
     "anestheticPort": "6",
@@ -31428,7 +31428,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10C",
     "anestheticPort": "5",
@@ -31596,7 +31596,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "ombro",
     "type": "cirurgico",
     "porte": "3C",
     "anestheticPort": "1",
@@ -31708,7 +31708,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "ombro",
     "type": "cirurgico",
     "porte": "7A",
     "anestheticPort": "2",
@@ -31736,7 +31736,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "ombro",
     "type": "cirurgico",
     "porte": "2B",
     "anestheticPort": "0",
@@ -31764,7 +31764,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "ombro",
     "type": "cirurgico",
     "porte": "3A",
     "anestheticPort": "2",
@@ -31792,7 +31792,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "ombro",
     "type": "cirurgico",
     "porte": "7C",
     "anestheticPort": "3",
@@ -31820,7 +31820,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "ombro",
     "type": "cirurgico",
     "porte": "7C",
     "anestheticPort": "3",
@@ -31848,7 +31848,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "ombro",
     "type": "cirurgico",
     "porte": "8C",
     "anestheticPort": "3",
@@ -31876,7 +31876,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "ombro",
     "type": "cirurgico",
     "porte": "6C",
     "anestheticPort": "3",
@@ -31904,7 +31904,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "ombro",
     "type": "cirurgico",
     "porte": "8C",
     "anestheticPort": "4",
@@ -32016,7 +32016,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "ombro",
     "type": "cirurgico",
     "porte": "",
     "anestheticPort": "0",
@@ -33220,7 +33220,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "4C",
     "anestheticPort": "2",
@@ -33332,7 +33332,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "9A",
     "anestheticPort": "4",
@@ -33388,7 +33388,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "4C",
     "anestheticPort": "1",
@@ -33444,7 +33444,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "7C",
     "anestheticPort": "3",
@@ -33472,7 +33472,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "8C",
     "anestheticPort": "5",
@@ -33500,7 +33500,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "8B",
     "anestheticPort": "3",
@@ -33528,7 +33528,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "3C",
     "anestheticPort": "1",
@@ -33556,7 +33556,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "3B",
     "anestheticPort": "1",
@@ -33612,7 +33612,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "6C",
     "anestheticPort": "3",
@@ -33640,7 +33640,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "6C",
     "anestheticPort": "3",
@@ -33696,7 +33696,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "2A",
     "anestheticPort": "0",
@@ -33724,7 +33724,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "4C",
     "anestheticPort": "2",
@@ -33752,7 +33752,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "2C",
     "anestheticPort": "1",
@@ -33808,7 +33808,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "2C",
     "anestheticPort": "0",
@@ -33836,7 +33836,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "4A",
     "anestheticPort": "2",
@@ -33864,7 +33864,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "6C",
     "anestheticPort": "2",
@@ -33892,7 +33892,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "2B",
     "anestheticPort": "1",
@@ -33948,7 +33948,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "5B",
     "anestheticPort": "2",
@@ -33976,7 +33976,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "5B",
     "anestheticPort": "3",
@@ -34004,7 +34004,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "5B",
     "anestheticPort": "2",
@@ -34228,7 +34228,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "5B",
     "anestheticPort": "3",
@@ -34312,7 +34312,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "4C",
     "anestheticPort": "1",
@@ -34396,7 +34396,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "7C",
     "anestheticPort": "3",
@@ -34900,7 +34900,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "2C",
     "anestheticPort": "0",
@@ -35096,7 +35096,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "1C",
     "anestheticPort": "1",
@@ -35124,7 +35124,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "4C",
     "anestheticPort": "1",
@@ -35152,7 +35152,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "2B",
     "anestheticPort": "1",
@@ -35180,7 +35180,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "4C",
     "anestheticPort": "2",
@@ -35348,7 +35348,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "2C",
     "anestheticPort": "1",
@@ -35376,7 +35376,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "3C",
     "anestheticPort": "1",
@@ -35432,7 +35432,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "5B",
     "anestheticPort": "3",
@@ -35460,7 +35460,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "5B",
     "anestheticPort": "3",
@@ -35628,7 +35628,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "6A",
     "anestheticPort": "3",
@@ -35656,7 +35656,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "6A",
     "anestheticPort": "3",
@@ -35740,7 +35740,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "9B",
     "anestheticPort": "3",
@@ -35936,7 +35936,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "6A",
     "anestheticPort": "1",
@@ -36496,7 +36496,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "3B",
     "anestheticPort": "1",
@@ -36552,7 +36552,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "2A",
     "anestheticPort": "0",
@@ -36608,7 +36608,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "9C",
     "anestheticPort": "5",
@@ -36636,7 +36636,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "2C",
     "anestheticPort": "3",
@@ -36748,7 +36748,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "",
     "anestheticPort": "0",
@@ -37308,7 +37308,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "joelho",
+    "region": "quadril",
     "type": "cirurgico",
     "porte": "8A",
     "anestheticPort": "3",
@@ -37756,7 +37756,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "joelho",
+    "region": "quadril",
     "type": "cirurgico",
     "porte": "8B",
     "anestheticPort": "5",
@@ -37784,7 +37784,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "joelho",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "8A",
     "anestheticPort": "4",
@@ -37812,7 +37812,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "quadril",
     "type": "cirurgico",
     "porte": "8B",
     "anestheticPort": "3",
@@ -37840,7 +37840,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "joelho",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "3C",
     "anestheticPort": "1",
@@ -37868,7 +37868,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "joelho",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "8B",
     "anestheticPort": "4",
@@ -37952,7 +37952,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "joelho",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "8A",
     "anestheticPort": "4",
@@ -38008,7 +38008,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "joelho",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "3A",
     "anestheticPort": "0",
@@ -38036,7 +38036,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "joelho",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "4C",
     "anestheticPort": "2",
@@ -38064,7 +38064,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "joelho",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "8B",
     "anestheticPort": "5",
@@ -38120,7 +38120,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "joelho",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "9C",
     "anestheticPort": "4",
@@ -38176,7 +38176,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "joelho",
+    "region": "quadril",
     "type": "cirurgico",
     "porte": "8A",
     "anestheticPort": "4",
@@ -38204,7 +38204,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "joelho",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "",
     "anestheticPort": "0",
@@ -38232,7 +38232,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "joelho",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "",
     "anestheticPort": "0",
@@ -38260,7 +38260,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "joelho",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "",
     "anestheticPort": "0",
@@ -38652,7 +38652,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "joelho",
     "type": "cirurgico",
     "porte": "8B",
     "anestheticPort": "4",
@@ -38680,7 +38680,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "joelho",
     "type": "cirurgico",
     "porte": "8A",
     "anestheticPort": "4",
@@ -38904,7 +38904,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "joelho",
     "type": "cirurgico",
     "porte": "7A",
     "anestheticPort": "3",
@@ -39352,7 +39352,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "joelho",
     "type": "cirurgico",
     "porte": "3C",
     "anestheticPort": "1",
@@ -39464,7 +39464,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "joelho",
     "type": "cirurgico",
     "porte": "6A",
     "anestheticPort": "2",
@@ -39492,7 +39492,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "joelho",
     "type": "cirurgico",
     "porte": "6A",
     "anestheticPort": "2",
@@ -39548,7 +39548,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "joelho",
     "type": "cirurgico",
     "porte": "7C",
     "anestheticPort": "3",
@@ -39576,7 +39576,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "joelho",
     "type": "cirurgico",
     "porte": "3A",
     "anestheticPort": "3",
@@ -39604,7 +39604,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "joelho",
     "type": "cirurgico",
     "porte": "9A",
     "anestheticPort": "4",
@@ -39632,7 +39632,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "joelho",
     "type": "cirurgico",
     "porte": "3A",
     "anestheticPort": "3",
@@ -39716,7 +39716,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "joelho",
     "type": "cirurgico",
     "porte": "8C",
     "anestheticPort": "4",
@@ -40444,7 +40444,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "tornozelo-pe",
     "type": "cirurgico",
     "porte": "6A",
     "anestheticPort": "2",
@@ -40472,7 +40472,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "3B",
     "anestheticPort": "1",
@@ -40780,7 +40780,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "7A",
     "anestheticPort": "2",
@@ -40836,7 +40836,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "6B",
     "anestheticPort": "2",
@@ -41144,7 +41144,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "9A",
     "anestheticPort": "3",
@@ -41508,7 +41508,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "4C",
     "anestheticPort": "2",
@@ -41872,7 +41872,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "6A",
     "anestheticPort": "3",
@@ -44112,7 +44112,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "9C",
     "anestheticPort": "5",
@@ -44140,7 +44140,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "9C",
     "anestheticPort": "5",
@@ -44168,7 +44168,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "8C",
     "anestheticPort": "4",
@@ -44196,7 +44196,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "8C",
     "anestheticPort": "4",
@@ -44224,7 +44224,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "8C",
     "anestheticPort": "4",
@@ -44252,7 +44252,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "8C",
     "anestheticPort": "4",
@@ -44280,7 +44280,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "10C",
     "anestheticPort": "6",
@@ -44308,7 +44308,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "9C",
     "anestheticPort": "5",
@@ -44336,7 +44336,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "9C",
     "anestheticPort": "5",
@@ -44364,7 +44364,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "9C",
     "anestheticPort": "5",
@@ -44392,7 +44392,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "9C",
     "anestheticPort": "5",
@@ -44868,7 +44868,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "8C",
     "anestheticPort": "3",
@@ -46716,7 +46716,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "8C",
     "anestheticPort": "4",
@@ -46744,7 +46744,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9B",
     "anestheticPort": "4",
@@ -47080,7 +47080,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10A",
     "anestheticPort": "5",
@@ -48536,7 +48536,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "13C",
     "anestheticPort": "7",
@@ -48956,7 +48956,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "quadril",
     "type": "cirurgico",
     "porte": "8B",
     "anestheticPort": "5",
@@ -50384,7 +50384,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "11A",
     "anestheticPort": "6",
@@ -51028,7 +51028,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "11C",
     "anestheticPort": "5",
@@ -51112,7 +51112,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "11C",
     "anestheticPort": "7",
@@ -53016,7 +53016,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10C",
     "anestheticPort": "4",
@@ -53044,7 +53044,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "10A",
     "anestheticPort": "4",
@@ -53268,7 +53268,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "11B",
     "anestheticPort": "5",
@@ -53856,7 +53856,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10B",
     "anestheticPort": "6",
@@ -53912,7 +53912,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10A",
     "anestheticPort": "5",
@@ -53940,7 +53940,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10A",
     "anestheticPort": "5",
@@ -53968,7 +53968,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10B",
     "anestheticPort": "6",
@@ -53996,7 +53996,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10B",
     "anestheticPort": "6",
@@ -54052,7 +54052,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "12B",
     "anestheticPort": "7",
@@ -54192,7 +54192,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10A",
     "anestheticPort": "4",
@@ -54220,7 +54220,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10A",
     "anestheticPort": "4",
@@ -54388,7 +54388,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "14A",
     "anestheticPort": "7",
@@ -54416,7 +54416,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "14A",
     "anestheticPort": "7",
@@ -54584,7 +54584,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "11B",
     "anestheticPort": "5",
@@ -56628,7 +56628,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "10A",
     "anestheticPort": "5",
@@ -56656,7 +56656,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "10C",
     "anestheticPort": "6",
@@ -57552,7 +57552,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "12A",
     "anestheticPort": "6",
@@ -57580,7 +57580,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "12B",
     "anestheticPort": "7",
@@ -57860,7 +57860,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "quadril",
     "type": "cirurgico",
     "porte": "4B",
     "anestheticPort": "2",
@@ -62088,7 +62088,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "7A",
     "anestheticPort": "3",
@@ -62116,7 +62116,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "7A",
     "anestheticPort": "3",
@@ -71356,7 +71356,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "3A",
     "anestheticPort": "1",
@@ -71468,7 +71468,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "11B",
     "anestheticPort": "6",
@@ -72672,7 +72672,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "9C",
     "anestheticPort": "3",
@@ -72812,7 +72812,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "6A",
     "anestheticPort": "4",
@@ -72868,7 +72868,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "8A",
     "anestheticPort": "5",
@@ -72896,7 +72896,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "5B",
     "anestheticPort": "4",
@@ -72952,7 +72952,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "8B",
     "anestheticPort": "4",
@@ -72980,7 +72980,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "8A",
     "anestheticPort": "4",
@@ -73064,7 +73064,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "ambulatorial",
     "porte": "10C",
     "anestheticPort": "5",
@@ -73176,7 +73176,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "7A",
     "anestheticPort": "5",
@@ -73232,7 +73232,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "9B",
     "anestheticPort": "6",
@@ -73260,7 +73260,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "ambulatorial",
     "porte": "6B",
     "anestheticPort": "5",
@@ -73344,7 +73344,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "9C",
     "anestheticPort": "5",
@@ -73764,7 +73764,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "4C",
     "anestheticPort": "5",
@@ -77292,7 +77292,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "3C",
     "anestheticPort": "2",
@@ -77544,7 +77544,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "6B",
     "anestheticPort": "4",
@@ -78160,7 +78160,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "",
     "anestheticPort": "0",
@@ -79196,7 +79196,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "1C",
     "anestheticPort": "0",
@@ -79980,7 +79980,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "ambulatorial",
     "porte": "",
     "anestheticPort": "0",
@@ -104732,7 +104732,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "1A",
     "anestheticPort": "0",
@@ -105040,7 +105040,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "2B",
     "anestheticPort": "0",
@@ -110332,7 +110332,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "ambulatorial",
     "porte": "1A",
     "anestheticPort": "0",
@@ -147040,7 +147040,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "ombro",
     "type": "cirurgico",
     "porte": "1B",
     "anestheticPort": "0",
@@ -147124,7 +147124,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "ombro",
     "type": "cirurgico",
     "porte": "1B",
     "anestheticPort": "0",
@@ -147152,7 +147152,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "ombro",
     "type": "cirurgico",
     "porte": "1B",
     "anestheticPort": "0",
@@ -147292,7 +147292,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "mao-punho",
     "type": "cirurgico",
     "porte": "1B",
     "anestheticPort": "0",
@@ -147544,7 +147544,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "quadril",
     "type": "cirurgico",
     "porte": "1B",
     "anestheticPort": "0",
@@ -147712,7 +147712,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "tornozelo-pe",
     "type": "cirurgico",
     "porte": "1B",
     "anestheticPort": "0",
@@ -150512,7 +150512,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "4A",
     "anestheticPort": "0",
@@ -152640,7 +152640,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "cirurgico",
     "porte": "5C",
     "anestheticPort": "3",
@@ -153872,7 +153872,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10A",
     "anestheticPort": "5",
@@ -153900,7 +153900,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "10A",
     "anestheticPort": "5",
@@ -154292,7 +154292,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "4A",
     "anestheticPort": "3",
@@ -155020,7 +155020,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "2A",
     "anestheticPort": "0",
@@ -157876,7 +157876,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "quadril",
     "type": "cirurgico",
     "porte": "3A",
     "anestheticPort": "0",
@@ -157904,7 +157904,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "3C",
     "anestheticPort": "0",
@@ -159332,7 +159332,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "mao-punho",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "3C",
     "anestheticPort": "0",
@@ -159752,7 +159752,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "quadril",
     "type": "cirurgico",
     "porte": "3C",
     "anestheticPort": "0",
@@ -159864,7 +159864,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "3C",
     "anestheticPort": "0",
@@ -161964,7 +161964,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "quadril",
     "type": "cirurgico",
     "porte": "5A",
     "anestheticPort": "0",
@@ -163000,7 +163000,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "cirurgico",
     "porte": "1B",
     "anestheticPort": "0",
@@ -163924,7 +163924,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "ambulatorial",
     "porte": "",
     "anestheticPort": "0",
@@ -164204,7 +164204,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "coluna",
     "type": "ambulatorial",
     "porte": "1B",
     "anestheticPort": "0",
@@ -169104,7 +169104,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "ambulatorial",
     "porte": "",
     "anestheticPort": "0",
@@ -169468,7 +169468,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "outros",
+    "region": "cotovelo",
     "type": "ambulatorial",
     "porte": "",
     "anestheticPort": "0",
@@ -177140,7 +177140,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "ambulatorial",
     "porte": "",
     "anestheticPort": "0",
@@ -177168,7 +177168,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "ambulatorial",
     "porte": "",
     "anestheticPort": "0",
@@ -177196,7 +177196,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "ambulatorial",
     "porte": "",
     "anestheticPort": "0",
@@ -178288,7 +178288,7 @@
       "tuss": 0,
       "sus": 0
     },
-    "region": "tornozelo-pe",
+    "region": "outros",
     "type": "ambulatorial",
     "porte": "",
     "anestheticPort": "0",
