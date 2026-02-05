@@ -1,64 +1,77 @@
-# Welcome to your Lovable project
+# OrthoCode 2.0
 
-## Project info
+Sistema de busca e gerenciamento de códigos TUSS para procedimentos ortopédicos.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🏗️ Estrutura do Projeto
 
-## How can I edit this code?
+```
+orthocode2/
+├── docs/                    # Documentação e SQL
+│   ├── sql/                # Scripts SQL (RLS, setup)
+│   ├── setup/              # Dados de setup (tuss-data.xls)
+│   └── PRD-OrthoCode-2.0.md
+├── public/                  # Assets públicos e ícones
+├── src/
+│   ├── components/         # Componentes React
+│   ├── contexts/           # Context providers (Auth)
+│   ├── data/               # Dados estáticos
+│   ├── hooks/              # Custom hooks
+│   ├── lib/                # Utilitários (Supabase)
+│   ├── pages/              # Páginas da aplicação
+│   └── types/              # Definições TypeScript
+└── scripts/                # Scripts de build e conversão
+```
 
-There are several ways of editing your application.
+## 🚀 Tecnologias
 
-**Use Lovable**
+- **Frontend**: React + TypeScript + Vite
+- **UI**: shadcn/ui + Tailwind CSS
+- **Backend**: Supabase (Auth + PostgreSQL)
+- **Deploy**: Vercel
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## 📦 Setup Local
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Clone o repositório
+git clone https://github.com/phgutierrez/Orthocode2.git
+cd Orthocode2
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Instale dependências
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Configure variáveis de ambiente
+# Crie .env.local com:
+# VITE_SUPABASE_URL=sua_url
+# VITE_SUPABASE_ANON_KEY=sua_key
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Inicie o servidor de desenvolvimento
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 🗄️ Setup do Banco de Dados
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Execute os scripts SQL em ordem no Supabase SQL Editor:
 
-**Use GitHub Codespaces**
+1. `docs/sql/SHARE_SETUP.sql` - Tabelas de compartilhamento
+2. `docs/sql/USER_RLS_FIX.sql` - Políticas RLS de usuários
+3. `docs/sql/PACKAGE_PROCEDURES_RLS.sql` - RLS de procedimentos
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 📖 Documentação
 
-## What technologies are used for this project?
+- **PRD**: `docs/PRD-OrthoCode-2.0.md`
+- **Dados TUSS**: `docs/setup/tuss-data.xls`
 
-This project is built with:
+## 🤝 Contribuindo
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/NovaFuncionalidade`)
+3. Commit suas mudanças (`git commit -m 'Adiciona nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/NovaFuncionalidade`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto está sob licença proprietária.
 
 ## How can I deploy this project?
 
