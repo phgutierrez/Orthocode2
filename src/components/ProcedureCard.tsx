@@ -27,7 +27,7 @@ export function ProcedureCard({ procedure, isFavorite, onToggleFavorite, onClick
 
   return (
     <Card 
-      className="cursor-pointer hover:shadow-md transition-all hover:border-primary/50 animate-fade-in"
+      className="cursor-pointer card-hover liquid-glass animate-scale-in border-0"
       onClick={onClick}
     >
       <CardContent className="p-4">
@@ -46,7 +46,7 @@ export function ProcedureCard({ procedure, isFavorite, onToggleFavorite, onClick
               </Badge>
             </div>
 
-            <div className="bg-muted rounded-lg p-3 text-center">
+            <div className="bg-muted/50 backdrop-blur-sm rounded-lg p-3 text-center">
               <p className="text-muted-foreground mb-1 text-xs">Código TUSS</p>
               <p className="font-mono font-medium text-foreground text-lg">{procedure.codes.tuss}</p>
             </div>

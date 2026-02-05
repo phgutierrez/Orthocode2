@@ -21,7 +21,7 @@ export function BottomNav() {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border safe-area-bottom z-40">
+    <nav className="fixed bottom-0 left-0 right-0 liquid-glass border-t border-white/20 safe-area-bottom z-40">
       <div className="flex items-center justify-between h-16 max-w-lg mx-auto px-2">
         <div className="flex items-center gap-1">
           {navItems.map(({ path, icon: Icon, label }) => {
@@ -31,10 +31,10 @@ export function BottomNav() {
                 key={path}
                 onClick={() => navigate(path)}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-xl transition-colors",
+                  "flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-xl transition-all",
                   isActive 
-                    ? "text-primary" 
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "text-primary bg-primary/10" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                 )}
               >
                 <Icon className={cn("h-6 w-6", isActive && "fill-primary/20")} />
@@ -52,7 +52,7 @@ export function BottomNav() {
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center justify-center gap-1 px-4 py-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            className="flex items-center justify-center gap-1 px-4 py-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
             title="Sair"
           >
             <LogOut className="h-5 w-5" />

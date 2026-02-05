@@ -62,9 +62,9 @@ export default function Index() {
   const showResults = searchQuery || selectedRegion || selectedType;
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen medical-gradient-radial pb-20 smooth-scroll">
       {/* Header */}
-      <header className="medical-gradient pt-8 pb-12 px-4 safe-area-top">
+      <header className="medical-gradient pt-8 pb-12 px-4 safe-area-top animate-fade-in">
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-center mb-8">
             <Logo size="lg" />
@@ -82,7 +82,7 @@ export default function Index() {
         <div className="max-w-2xl mx-auto space-y-6">
           
           {/* Filters */}
-          <div className="bg-card rounded-xl p-4 shadow-sm border border-border">
+          <div className="liquid-glass rounded-2xl p-4 animate-slide-up">
             <FilterChips
               selectedRegion={selectedRegion}
               selectedType={selectedType}
