@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Package, Plus, Clipboard, Pencil, Trash2, Search, X, Share2, Bell, Check } from 'lucide-react';
+import { Package, Plus, Clipboard, Pencil, Trash2, Search, X, Share2, Bell, Check, Heart } from 'lucide-react';
 import { BottomNav } from '@/components/BottomNav';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { FilterChips } from '@/components/FilterChips';
 import { usePackages } from '@/hooks/usePackages';
 import { useProcedures } from '@/hooks/useProcedures';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -16,7 +17,8 @@ import { useUsers } from '@/hooks/useUsers';
 import { useNotifications } from '@/hooks/useNotifications';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/components/ui/use-toast';
-import { regionLabels, typeLabels } from '@/types/procedure';
+import { regionLabels, typeLabels, AnatomicRegion, ProcedureType } from '@/types/procedure';
+import { searchProcedures } from '@/data/procedures';
 import { supabase } from '@/lib/supabase';
 
 export default function Packages() {
@@ -35,6 +37,9 @@ export default function Packages() {
   const [viewingPackageId, setViewingPackageId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('list');
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+  const [selectedRegion, setSelectedRegion] = useState<AnatomicRegion>();
+  const [selectedType, setSelectedType] = useState<ProcedureType>();
 
   // Filtrar usuários removendo duplicatas e o usuário atual
   const availableUsers = useMemo(() => {
@@ -44,30 +49,27 @@ export default function Packages() {
     return uniqueUsers.filter(u => u.id !== user?.id);
   }, [users, user?.id]);
 
-  const favoriteProcedures = useMemo(() => {
-    if (!Array.isArray(favorites) || !Array.isArray(procedures)) {
-      return [];
-    }
-    return favorites
-      .map(id => procedures.find(p => p.id === id))
-      .filter(Boolean) as typeof procedures;
-  }, [favorites, procedures]);
-
   const filteredProcedures = useMemo(() => {
-    const safeQuery = query?.trim() ?? '';
-    if (!safeQuery) return favoriteProcedures;
-    const q = safeQuery.toLowerCase();
-    return favoriteProcedures.filter((procedure) => {
-      if (!procedure) return false;
-      return (
-        procedure.name?.toLowerCase().includes(q) ||
-        procedure.codes?.tuss?.toLowerCase().includes(q) ||
-        procedure.codes?.cbhpm?.toLowerCase().includes(q) ||
-        procedure.codes?.sus?.toLowerCase().includes(q) ||
-        procedure.keywords?.some(keyword => keyword?.toLowerCase().includes(q))
-      );
+    if (!Array.isArray(procedures)) return [];
+    
+    // Aplicar filtros de região e tipo primeiro
+    let filtered = searchProcedures(procedures, query?.trim() ?? '', {
+      region: selectedRegion,
+      type: selectedType,
     });
-  }, [query, favoriteProcedures]);
+    
+    // Se não houver query, região ou tipo, mostrar todos
+    if (!query?.trim() && !selectedRegion && !selectedType) {
+      filtered = procedures;
+    }
+    
+    // Filtrar apenas favoritos se ativado
+    if (showOnlyFavorites) {
+      filtered = filtered.filter(p => favorites.includes(p.id));
+    }
+    
+    return filtered;
+  }, [procedures, query, selectedRegion, selectedType, showOnlyFavorites, favorites]);
 
   const filteredPackages = useMemo(() => {
     const safeQuery = packageQuery?.trim() ?? '';
@@ -102,6 +104,9 @@ export default function Packages() {
     setDescription('');
     setQuery('');
     setSelectedProcedures([]);
+    setShowOnlyFavorites(false);
+    setSelectedRegion(undefined);
+    setSelectedType(undefined);
   };
 
   const handleToggleProcedure = (id: string) => {
@@ -554,25 +559,72 @@ export default function Packages() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">Adicionar procedimentos dos favoritos</label>
+                <label className="text-sm font-medium text-foreground">Buscar procedimentos</label>
                 <div className="relative">
                   <Search className="h-4 w-4 text-muted-foreground absolute left-3 top-3" />
                   <Input
                     className="pl-9"
-                    placeholder="Buscar nos favoritos"
+                    placeholder="Buscar código TUSS, nome, palavras-chave..."
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
                   />
                 </div>
-                {favoriteProcedures.length === 0 && (
-                  <p className="text-sm text-muted-foreground">
-                    Nenhum favorito ainda. Adicione procedimentos aos favoritos para criar pacotes.
-                  </p>
+              </div>
+
+              {/* Filtros de região e tipo */}
+              <div className="space-y-2">
+                <FilterChips
+                  selectedRegion={selectedRegion}
+                  selectedType={selectedType}
+                  onRegionChange={setSelectedRegion}
+                  onTypeChange={setSelectedType}
+                />
+              </div>
+
+              {/* Toggle de favoritos */}
+              <div className="flex items-center gap-2">
+                <Button
+                  variant={showOnlyFavorites ? "default" : "outline"}
+                  size="sm"
+                  className="gap-2"
+                  onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
+                >
+                  <Heart className={showOnlyFavorites ? "h-4 w-4 fill-current" : "h-4 w-4"} />
+                  {showOnlyFavorites ? 'Exibindo favoritos' : 'Exibir apenas favoritos'}
+                </Button>
+                {(query || selectedRegion || selectedType || showOnlyFavorites) && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setQuery('');
+                      setSelectedRegion(undefined);
+                      setSelectedType(undefined);
+                      setShowOnlyFavorites(false);
+                    }}
+                  >
+                    Limpar filtros
+                  </Button>
                 )}
               </div>
 
-              {favoriteProcedures.length > 0 && (
-                <div className="grid gap-3 max-h-72 overflow-y-auto pr-1">
+              {filteredProcedures.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-muted-foreground">
+                      {filteredProcedures.length} procedimento{filteredProcedures.length !== 1 ? 's' : ''} disponível{filteredProcedures.length !== 1 ? 'is' : ''}
+                    </p>
+                    {selectedProcedures.length > 0 && (
+                      <p className="text-sm font-medium text-primary">
+                        {selectedProcedures.length} selecionado{selectedProcedures.length !== 1 ? 's' : ''}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {filteredProcedures.length > 0 && (
+                <div className="grid gap-3 max-h-96 overflow-y-auto pr-1">
                   {filteredProcedures.map((procedure) => {
                   const selected = selectedProcedures.includes(procedure.id);
                   return (
@@ -607,8 +659,17 @@ export default function Packages() {
               </div>
               )}
 
+              {filteredProcedures.length === 0 && (
+                <p className="text-sm text-muted-foreground text-center py-8">
+                  {showOnlyFavorites 
+                    ? 'Nenhum favorito encontrado. Adicione procedimentos aos favoritos primeiro.'
+                    : 'Nenhum procedimento encontrado. Ajuste os filtros ou busca.'
+                  }
+                </p>
+              )}
+
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                <Button className="flex-1 gap-2" onClick={handleSubmit} disabled={favoriteProcedures.length === 0}>
+                <Button className="flex-1 gap-2" onClick={handleSubmit}>
                   <Plus className="h-4 w-4" />
                   {editingId ? 'Salvar alterações' : 'Criar pacote'}
                 </Button>
