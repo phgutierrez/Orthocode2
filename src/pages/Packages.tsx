@@ -292,13 +292,19 @@ export default function Packages() {
 
       const sharedPkg = packageData[0];
       console.log('Pacote encontrado:', sharedPkg);
+      console.log('Package procedures:', sharedPkg.package_procedures);
 
       // Criar cópia do pacote para o usuário
+      const procedureIds = sharedPkg.package_procedures?.map((p: any) => p.procedure_code) || [];
+      console.log('Procedure IDs extraídos:', procedureIds);
+      
       const payload = {
         name: sharedPkg.name,
         description: sharedPkg.description || '',
-        procedureIds: sharedPkg.package_procedures?.map((p: any) => p.procedure_code) || [],
+        procedureIds: procedureIds,
       };
+      
+      console.log('Payload para addPackage:', payload);
 
       await addPackage(payload);
 
