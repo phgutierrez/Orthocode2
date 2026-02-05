@@ -9,22 +9,22 @@ export default function About() {
     {
       icon: Search,
       title: 'Busca Inteligente',
-      description: 'Encontre procedimentos por nome, código TUSS ou palavra-chave na base com 6.400+ códigos.',
+      description: 'Encontre procedimentos por nome, código TUSS, CBHPM ou palavra-chave na base com 6.400+ códigos.',
     },
     {
       icon: Heart,
       title: 'Favoritos e Pacotes',
-      description: 'Salve favoritos e crie pacotes personalizados de procedimentos isolados por usuário.',
+      description: 'Salve favoritos e crie pacotes personalizados. Compartilhe pacotes com colegas via convite.',
     },
     {
       icon: Smartphone,
       title: 'Instalável',
-      description: 'Adicione à tela inicial do seu celular como um aplicativo nativo.',
+      description: 'Adicione à tela inicial como app nativo. Funciona offline com dados completos.',
     },
     {
       icon: Shield,
       title: '100% Gratuito',
-      description: 'Todas as funcionalidades disponíveis gratuitamente.',
+      description: 'Todas as funcionalidades disponíveis gratuitamente. Sem limitações de uso.',
     },
   ];
 
@@ -36,8 +36,9 @@ export default function About() {
           <div className="flex justify-center mb-6">
             <Logo size="lg" />
           </div>
+          <h1 className="text-2xl font-bold text-white mb-2">Pacote TUSS</h1>
           <p className="text-white/90 text-lg">
-            Sua referência rápida para códigos TUSS de procedimentos médicos
+            Gerenciador completo de códigos TUSS com filtros, favoritos e pacotes personalizados
           </p>
           <Badge className="mt-4 bg-white/20 text-white border-0">
             Versão 2.0
@@ -69,24 +70,39 @@ export default function About() {
           {/* About */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Sobre o TussPack</CardTitle>
+              <CardTitle className="text-lg">Sobre o Pacote TUSS</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-muted-foreground">
               <p>
-                O TussPack foi desenvolvido para facilitar a busca e consulta de códigos de procedimentos médicos utilizando a tabela TUSS (Terminologia Unificada da Saúde Suplementar).
+                Pacote TUSS é um gerenciador completo de códigos de procedimentos médicos baseado na tabela TUSS (Terminologia Unificada da Saúde Suplementar) com suporte completo a classificação, busca e organização.
               </p>
               <p>
                 <strong className="text-foreground">Versão 2.0 - Recursos Implementados:</strong>
               </p>
               <ul className="list-disc list-inside space-y-1 ml-2">
-                <li>✅ Sistema de autenticação com login e cadastro</li>
-                <li>✅ Isolamento de dados por usuário</li>
-                <li>✅ Favoritos independentes por conta</li>
-                <li>✅ Pacotes personalizados de procedimentos</li>
-                <li>✅ Base de dados real com 6.400+ códigos TUSS</li>
-                <li>✅ Busca inteligente por nome, código ou palavra-chave</li>
-                <li>✅ PWA instalável (funciona offline)</li>
-                <li>✅ Exportação de pacotes com formatação</li>
+                <li>✅ Sistema de autenticação com login e cadastro na nuvem (Supabase)</li>
+                <li>✅ Isolamento seguro de dados por usuário com RLS</li>
+                <li>✅ Favoritos sincronizados em múltiplos dispositivos</li>
+                <li>✅ Pacotes personalizados com descrição e compartilhamento</li>
+                <li>✅ Notificações de recebimento e aceitação de pacotes</li>
+                <li>✅ Base de dados real com 6.400+ procedimentos TUSS</li>
+                <li>✅ Busca avançada por nome, código TUSS, CBHPM ou palavra-chave</li>
+                <li>✅ Filtros por tipo: Cirúrgico, Ambulatorial, Diagnóstico</li>
+                <li>✅ Filtros por região anatômica: 10 regiões específicas (Coluna, Ombro, Cotovelo, Mão-Punho, Quadril, Joelho, Tornozelo-Pé, etc)</li>
+                <li>✅ Classificação por porte cirúrgico (1A a 4E)</li>
+                <li>✅ Valores de procedimentos (CBHPM, TUSS, SUS)</li>
+                <li>✅ PWA instalável com funcionalidade offline</li>
+                <li>✅ Design responsivo com glassmorphism iOS</li>
+              </ul>
+              <p>
+                <strong className="text-foreground">Dados inclusos:</strong>
+              </p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li>6.400+ procedimentos TUSS completamente catalogados</li>
+                <li>Integração com tabela CBHPM 5ª edição</li>
+                <li>Classificação inteligente de tipos procedimentais</li>
+                <li>Mapeamento de 50+ termos anatômicos por região</li>
+                <li>Distinção automática: proximal vs distal, diagnóstico vs intervenção</li>
               </ul>
               <p>
                 <strong className="text-foreground">Próximas funcionalidades:</strong>
@@ -94,9 +110,10 @@ export default function About() {
               <ul className="list-disc list-inside space-y-1 ml-2">
                 <li>Calculadora de honorários por procedimento</li>
                 <li>Gerador de documentos TISS</li>
-                <li>Sincronização na nuvem entre dispositivos</li>
-                <li>Recuperação de senha</li>
-                <li>Perfil de usuário com configurações</li>
+                <li>Recuperação de senha avançada</li>
+                <li>Perfil de usuário com configurações personalizadas</li>
+                <li>Histórico de procedimentos consultados</li>
+                <li>Relatórios e análises de uso</li>
               </ul>
             </CardContent>
           </Card>
