@@ -211,7 +211,7 @@ export default function Packages() {
 
     const formatted = [
       `${pkg.name}`,
-      '',
+      ...(pkg.description ? [pkg.description, ''] : ['']),
       ...proceduresList.map(proc => `- ${proc!.codes.tuss} - ${proc!.name} (Porte ${proc!.porte || '-'})`),
     ].join('\n');
 

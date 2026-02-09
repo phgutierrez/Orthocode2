@@ -89,10 +89,8 @@ export default function About() {
                 <li>✅ Busca avançada por nome, código TUSS, CBHPM ou palavra-chave</li>
                 <li>✅ Filtros por tipo: Cirúrgico, Ambulatorial, Diagnóstico</li>
                 <li>✅ Filtros por região anatômica: 10 regiões específicas (Coluna, Ombro, Cotovelo, Mão-Punho, Quadril, Joelho, Tornozelo-Pé, etc)</li>
-                <li>✅ Classificação por porte cirúrgico (1A a 4E)</li>
-                <li>✅ Valores de procedimentos (CBHPM, TUSS, SUS)</li>
+                <li>✅ Classificação por porte cirúrgico com múltiplas categorias</li>
                 <li>✅ PWA instalável com funcionalidade offline</li>
-                <li>✅ Design responsivo com glassmorphism iOS</li>
               </ul>
               <p>
                 <strong className="text-foreground">Dados inclusos:</strong>
@@ -102,12 +100,12 @@ export default function About() {
                 <li>Integração com tabela CBHPM 5ª edição</li>
                 <li>Classificação inteligente de tipos procedimentais</li>
                 <li>Mapeamento de 50+ termos anatômicos por região</li>
-                <li>Distinção automática: proximal vs distal, diagnóstico vs intervenção</li>
               </ul>
               <p>
                 <strong className="text-foreground">Próximas funcionalidades:</strong>
               </p>
               <ul className="list-disc list-inside space-y-1 ml-2">
+                <li>Valores de procedimentos (CBHPM, TUSS, SUS)</li>
                 <li>Calculadora de honorários por procedimento</li>
                 <li>Gerador de documentos TISS</li>
                 <li>Recuperação de senha avançada</li>
