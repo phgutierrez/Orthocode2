@@ -146,6 +146,21 @@ export default function Packages() {
     return filtered;
   }, [procedures, privateQuery, privateSelectedRegion, privateSelectedType, privateShowOnlyFavorites, favorites]);
 
+  const orderSelectedFirst = (list: typeof procedures, selectedIds: string[]) => {
+    const selectedSet = new Set(selectedIds);
+    const selected = list.filter((item) => selectedSet.has(item.id));
+    const rest = list.filter((item) => !selectedSet.has(item.id));
+    return [...selected, ...rest];
+  };
+
+  const orderedFilteredProcedures = useMemo(() => {
+    return orderSelectedFirst(filteredProcedures, selectedProcedures);
+  }, [filteredProcedures, selectedProcedures]);
+
+  const orderedFilteredPrivateProcedures = useMemo(() => {
+    return orderSelectedFirst(filteredPrivateProcedures, privateSelectedProcedures);
+  }, [filteredPrivateProcedures, privateSelectedProcedures]);
+
   const filteredPackages = useMemo(() => {
     const safeQuery = packageQuery?.trim() ?? '';
     if (!safeQuery) return packages;
@@ -1013,7 +1028,7 @@ export default function Packages() {
 
               {filteredProcedures.length > 0 && (
                 <div className="grid gap-3 max-h-96 overflow-y-auto pr-1">
-                  {filteredProcedures.map((procedure) => {
+                  {orderedFilteredProcedures.map((procedure) => {
                   const selected = selectedProcedures.includes(procedure.id);
                   return (
                     <button
@@ -1421,7 +1436,7 @@ export default function Packages() {
 
                   {filteredPrivateProcedures.length > 0 && (
                     <div className="grid gap-3 max-h-96 overflow-y-auto pr-1">
-                      {filteredPrivateProcedures.map((procedure) => {
+                      {orderedFilteredPrivateProcedures.map((procedure) => {
                         const selected = privateSelectedProcedures.includes(procedure.id);
                         return (
                           <button
