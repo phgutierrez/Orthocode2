@@ -1,28 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { loadProcedures } from '@/data/procedures';
 import { Procedure } from '@/types/procedure';
 
 export function useProcedures() {
-  const [procedures, setProcedures] = useState<Procedure[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const { data, isLoading, error } = useQuery<Procedure[]>({
+    queryKey: ['procedures'],
+    queryFn: loadProcedures,
+    staleTime: 1000 * 60 * 60,
+  });
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const data = await loadProcedures();
-        setProcedures(Array.isArray(data) ? data : []);
-      } catch (err) {
-        const error = err instanceof Error ? err : new Error('Failed to load procedures');
-        console.error('Error in useProcedures:', error);
-        setError(error);
-        setProcedures([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
-
-  return { procedures, loading, error };
+  return {
+    procedures: Array.isArray(data) ? data : [],
+    loading: isLoading,
+    error: error instanceof Error ? error : null,
+  };
 }

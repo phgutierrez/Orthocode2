@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Heart } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,7 +13,7 @@ interface ProcedureCardProps {
   onClick: () => void;
 }
 
-export function ProcedureCard({ procedure, isFavorite, onToggleFavorite, onClick }: ProcedureCardProps) {
+export const ProcedureCard = memo(function ProcedureCard({ procedure, isFavorite, onToggleFavorite, onClick }: ProcedureCardProps) {
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onToggleFavorite(procedure.id);
@@ -69,4 +70,4 @@ export function ProcedureCard({ procedure, isFavorite, onToggleFavorite, onClick
       </CardContent>
     </Card>
   );
-}
+});

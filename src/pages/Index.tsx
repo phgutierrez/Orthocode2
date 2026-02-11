@@ -11,6 +11,7 @@ import { searchProcedures } from '@/data/procedures';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useProcedures } from '@/hooks/useProcedures';
 import { Procedure, AnatomicRegion, ProcedureType } from '@/types/procedure';
+import { useDebounce } from '@/hooks/useDebounce';
 
 export default function Index() {
   const navigate = useNavigate();
@@ -19,29 +20,34 @@ export default function Index() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRegion, setSelectedRegion] = useState<AnatomicRegion>();
   const [selectedType, setSelectedType] = useState<ProcedureType>();
+  const debouncedSearchQuery = useDebounce(searchQuery, 200);
 
   const results = useMemo(() => {
-    if (!searchQuery && !selectedRegion && !selectedType) {
+    if (!debouncedSearchQuery && !selectedRegion && !selectedType) {
       return [];
     }
     if (!Array.isArray(procedures) || procedures.length === 0) {
       return [];
     }
-    return searchProcedures(procedures, searchQuery, {
+    return searchProcedures(procedures, debouncedSearchQuery, {
       region: selectedRegion,
       type: selectedType,
     });
-  }, [procedures, searchQuery, selectedRegion, selectedType]);
+  }, [procedures, debouncedSearchQuery, selectedRegion, selectedType]);
+
+  const procedureById = useMemo(() => {
+    return new Map(procedures.map((procedure) => [procedure.id, procedure]));
+  }, [procedures]);
 
   const recentFavorites = useMemo(() => {
-    if (!Array.isArray(favorites) || !Array.isArray(procedures)) {
+    if (!Array.isArray(favorites)) {
       return [];
     }
     return favorites
       .slice(0, 3)
-      .map(id => procedures.find(p => p.id === id))
+      .map((id) => procedureById.get(id))
       .filter(Boolean) as Procedure[];
-  }, [favorites, procedures]);
+  }, [favorites, procedureById]);
 
   if (loading) {
     return (

@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { Package, Plus, Clipboard, Pencil, Trash2, Search, X, Share2, Bell, Check, Heart } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Package, Plus, Clipboard, Pencil, Trash2, Search, Share2, Bell, Heart } from 'lucide-react';
 import { BottomNav } from '@/components/BottomNav';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { FilterChips } from '@/components/FilterChips';
@@ -17,12 +18,20 @@ import { useProcedures } from '@/hooks/useProcedures';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useUsers } from '@/hooks/useUsers';
 import { useNotifications } from '@/hooks/useNotifications';
+import { usePackageSharing } from '@/hooks/usePackageSharing';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/components/ui/use-toast';
 import { regionLabels, typeLabels, AnatomicRegion, ProcedureType } from '@/types/procedure';
 import type { OpmeItem, PrivatePackage } from '@/types/package';
 import { searchProcedures } from '@/data/procedures';
-import { supabase } from '@/lib/supabase';
+import { useDebounce } from '@/hooks/useDebounce';
+import { NotificationsModal } from './packages/NotificationsModal';
+import { PackageDetailModal } from './packages/PackageDetailModal';
+import { PrivatePackageDetailModal } from './packages/PrivatePackageDetailModal';
+import { OpmeSelectModal } from './packages/OpmeSelectModal';
+
+const INITIAL_VISIBLE_COUNT = 60;
+const VISIBLE_INCREMENT = 40;
 
 export default function Packages() {
   const { user } = useAuth();
@@ -37,7 +46,17 @@ export default function Packages() {
   const { procedures, loading } = useProcedures();
   const { favorites } = useFavorites();
   const { users } = useUsers();
-  const { notifications, unreadCount, markAsRead, deleteNotification, refetch: refetchNotifications } = useNotifications();
+  const { notifications, unreadCount, deleteNotification } = useNotifications();
+  const procedureById = useMemo(() => {
+    return new Map(procedures.map((procedure) => [procedure.id, procedure]));
+  }, [procedures]);
+  const { sharePackage, acceptShare, rejectShare } = usePackageSharing({
+    packages,
+    privatePackages,
+    addPackage,
+    addPrivatePackage,
+    deleteNotification,
+  });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -55,6 +74,8 @@ export default function Packages() {
   const [privatePackageQuery, setPrivatePackageQuery] = useState('');
   const [privateSelectedProcedures, setPrivateSelectedProcedures] = useState<string[]>([]);
   const [privateSelectedOpmes, setPrivateSelectedOpmes] = useState<string[]>([]);
+  const [privateOpmeEnabled, setPrivateOpmeEnabled] = useState(false);
+  const [showOpmeSelect, setShowOpmeSelect] = useState(false);
   const [privateSurgeonValue, setPrivateSurgeonValue] = useState(0);
   const [privateAnesthetistValue, setPrivateAnesthetistValue] = useState(0);
   const [privateAssistantValue, setPrivateAssistantValue] = useState(0);
@@ -70,6 +91,16 @@ export default function Packages() {
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState<AnatomicRegion>();
   const [selectedType, setSelectedType] = useState<ProcedureType>();
+  const debouncedQuery = useDebounce(query, 200);
+  const debouncedPrivateQuery = useDebounce(privateQuery, 200);
+  const debouncedPackageQuery = useDebounce(packageQuery, 200);
+  const debouncedPrivatePackageQuery = useDebounce(privatePackageQuery, 200);
+  const [standardVisibleCount, setStandardVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+  const [privateVisibleCount, setPrivateVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+  const standardListRef = useRef<HTMLDivElement | null>(null);
+  const standardSentinelRef = useRef<HTMLDivElement | null>(null);
+  const privateListRef = useRef<HTMLDivElement | null>(null);
+  const privateSentinelRef = useRef<HTMLDivElement | null>(null);
 
   // Filtrar usuários removendo duplicatas e o usuário atual
   const availableUsers = useMemo(() => {
@@ -109,13 +140,13 @@ export default function Packages() {
     if (!Array.isArray(procedures)) return [];
     
     // Aplicar filtros de região e tipo primeiro
-    let filtered = searchProcedures(procedures, query?.trim() ?? '', {
+    let filtered = searchProcedures(procedures, debouncedQuery?.trim() ?? '', {
       region: selectedRegion,
       type: selectedType,
     });
     
     // Se não houver query, região ou tipo, mostrar todos
-    if (!query?.trim() && !selectedRegion && !selectedType) {
+    if (!debouncedQuery?.trim() && !selectedRegion && !selectedType) {
       filtered = procedures;
     }
     
@@ -125,17 +156,17 @@ export default function Packages() {
     }
     
     return filtered;
-  }, [procedures, query, selectedRegion, selectedType, showOnlyFavorites, favorites]);
+  }, [procedures, debouncedQuery, selectedRegion, selectedType, showOnlyFavorites, favorites]);
 
   const filteredPrivateProcedures = useMemo(() => {
     if (!Array.isArray(procedures)) return [];
 
-    let filtered = searchProcedures(procedures, privateQuery?.trim() ?? '', {
+    let filtered = searchProcedures(procedures, debouncedPrivateQuery?.trim() ?? '', {
       region: privateSelectedRegion,
       type: privateSelectedType,
     });
 
-    if (!privateQuery?.trim() && !privateSelectedRegion && !privateSelectedType) {
+    if (!debouncedPrivateQuery?.trim() && !privateSelectedRegion && !privateSelectedType) {
       filtered = procedures;
     }
 
@@ -144,7 +175,7 @@ export default function Packages() {
     }
 
     return filtered;
-  }, [procedures, privateQuery, privateSelectedRegion, privateSelectedType, privateShowOnlyFavorites, favorites]);
+  }, [procedures, debouncedPrivateQuery, privateSelectedRegion, privateSelectedType, privateShowOnlyFavorites, favorites]);
 
   const orderSelectedFirst = (list: typeof procedures, selectedIds: string[]) => {
     const selectedSet = new Set(selectedIds);
@@ -161,8 +192,41 @@ export default function Packages() {
     return orderSelectedFirst(filteredPrivateProcedures, privateSelectedProcedures);
   }, [filteredPrivateProcedures, privateSelectedProcedures]);
 
+  const selectedProcedureSet = useMemo(() => new Set(selectedProcedures), [selectedProcedures]);
+  const selectedPrivateProcedureSet = useMemo(() => new Set(privateSelectedProcedures), [privateSelectedProcedures]);
+
+  const selectedOrderedProcedures = useMemo(() => {
+    return orderedFilteredProcedures.filter((procedure) => selectedProcedureSet.has(procedure.id));
+  }, [orderedFilteredProcedures, selectedProcedureSet]);
+
+  const unselectedOrderedProcedures = useMemo(() => {
+    return orderedFilteredProcedures.filter((procedure) => !selectedProcedureSet.has(procedure.id));
+  }, [orderedFilteredProcedures, selectedProcedureSet]);
+
+  const selectedOrderedPrivateProcedures = useMemo(() => {
+    return orderedFilteredPrivateProcedures.filter((procedure) => selectedPrivateProcedureSet.has(procedure.id));
+  }, [orderedFilteredPrivateProcedures, selectedPrivateProcedureSet]);
+
+  const unselectedOrderedPrivateProcedures = useMemo(() => {
+    return orderedFilteredPrivateProcedures.filter((procedure) => !selectedPrivateProcedureSet.has(procedure.id));
+  }, [orderedFilteredPrivateProcedures, selectedPrivateProcedureSet]);
+
+  const visibleStandardProcedures = useMemo(() => {
+    return [
+      ...selectedOrderedProcedures,
+      ...unselectedOrderedProcedures.slice(0, standardVisibleCount),
+    ];
+  }, [selectedOrderedProcedures, unselectedOrderedProcedures, standardVisibleCount]);
+
+  const visiblePrivateProcedures = useMemo(() => {
+    return [
+      ...selectedOrderedPrivateProcedures,
+      ...unselectedOrderedPrivateProcedures.slice(0, privateVisibleCount),
+    ];
+  }, [selectedOrderedPrivateProcedures, unselectedOrderedPrivateProcedures, privateVisibleCount]);
+
   const filteredPackages = useMemo(() => {
-    const safeQuery = packageQuery?.trim() ?? '';
+    const safeQuery = debouncedPackageQuery?.trim() ?? '';
     if (!safeQuery) return packages;
     const q = safeQuery.toLowerCase();
     return packages.filter((pkg) => {
@@ -171,10 +235,10 @@ export default function Packages() {
         pkg.description?.toLowerCase().includes(q)
       );
     });
-  }, [packageQuery, packages]);
+  }, [debouncedPackageQuery, packages]);
 
   const filteredPrivatePackages = useMemo(() => {
-    const safeQuery = privatePackageQuery?.trim() ?? '';
+    const safeQuery = debouncedPrivatePackageQuery?.trim() ?? '';
     if (!safeQuery) return privatePackages;
     const q = safeQuery.toLowerCase();
     return privatePackages.filter((pkg) => {
@@ -183,7 +247,55 @@ export default function Packages() {
         pkg.description?.toLowerCase().includes(q)
       );
     });
-  }, [privatePackageQuery, privatePackages]);
+  }, [debouncedPrivatePackageQuery, privatePackages]);
+
+  useEffect(() => {
+    setStandardVisibleCount(INITIAL_VISIBLE_COUNT);
+  }, [debouncedQuery, selectedRegion, selectedType, showOnlyFavorites, filteredProcedures.length]);
+
+  useEffect(() => {
+    setPrivateVisibleCount(INITIAL_VISIBLE_COUNT);
+  }, [debouncedPrivateQuery, privateSelectedRegion, privateSelectedType, privateShowOnlyFavorites, filteredPrivateProcedures.length]);
+
+  useEffect(() => {
+    const root = standardListRef.current;
+    const target = standardSentinelRef.current;
+    if (!root || !target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0]?.isIntersecting) return;
+        setStandardVisibleCount((current) => {
+          if (current >= unselectedOrderedProcedures.length) return current;
+          return Math.min(current + VISIBLE_INCREMENT, unselectedOrderedProcedures.length);
+        });
+      },
+      { root, rootMargin: '0px 0px 200px 0px' }
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [unselectedOrderedProcedures.length]);
+
+  useEffect(() => {
+    const root = privateListRef.current;
+    const target = privateSentinelRef.current;
+    if (!root || !target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0]?.isIntersecting) return;
+        setPrivateVisibleCount((current) => {
+          if (current >= unselectedOrderedPrivateProcedures.length) return current;
+          return Math.min(current + VISIBLE_INCREMENT, unselectedOrderedPrivateProcedures.length);
+        });
+      },
+      { root, rootMargin: '0px 0px 200px 0px' }
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [unselectedOrderedPrivateProcedures.length]);
 
   if (loading) {
     return (
@@ -197,7 +309,7 @@ export default function Packages() {
   const viewingProcedures = viewingPackage
     ? sortProceduresByPorte(
         viewingPackage.procedureIds
-          .map(procId => procedures.find(item => item.id === procId))
+          .map(procId => procedureById.get(procId))
           .filter(Boolean) as typeof procedures
       )
     : [];
@@ -208,7 +320,7 @@ export default function Packages() {
   const viewingPrivateProcedures = viewingPrivatePackage
     ? sortProceduresByPorte(
         viewingPrivatePackage.procedureIds
-          .map(procId => procedures.find(item => item.id === procId))
+          .map(procId => procedureById.get(procId))
           .filter(Boolean) as typeof procedures
       )
     : [];
@@ -236,6 +348,8 @@ export default function Packages() {
     setPrivateQuery('');
     setPrivateSelectedProcedures([]);
     setPrivateSelectedOpmes([]);
+    setPrivateOpmeEnabled(false);
+    setShowOpmeSelect(false);
     setPrivateSurgeonValue(0);
     setPrivateAnesthetistValue(0);
     setPrivateAssistantValue(0);
@@ -365,6 +479,8 @@ export default function Packages() {
     setPrivateDescription(pkg.description ?? '');
     setPrivateSelectedProcedures(pkg.procedureIds);
     setPrivateSelectedOpmes(pkg.opmeIds);
+    setPrivateOpmeEnabled(pkg.opmeIds.length > 0);
+    setShowOpmeSelect(false);
     setPrivateSurgeonValue(pkg.surgeonValue ?? 0);
     setPrivateAnesthetistValue(pkg.anesthetistValue ?? 0);
     setPrivateAssistantValue(pkg.assistantValue ?? 0);
@@ -393,7 +509,7 @@ export default function Packages() {
       name: privateName.trim(),
       description: privateDescription.trim(),
       procedureIds: privateSelectedProcedures,
-      opmeIds: privateSelectedOpmes,
+      opmeIds: privateOpmeEnabled ? privateSelectedOpmes : [],
       surgeonValue: privateSurgeonValue || 0,
       anesthetistValue: privateAnesthetistValue || 0,
       assistantValue: privateAssistantValue || 0,
@@ -479,7 +595,7 @@ export default function Packages() {
 
     const proceduresList = sortProceduresByPorte(
       pkg.procedureIds
-        .map(procId => procedures.find(item => item.id === procId))
+        .map(procId => procedureById.get(procId))
         .filter(Boolean) as typeof procedures
     );
 
@@ -510,7 +626,7 @@ export default function Packages() {
 
     const proceduresList = sortProceduresByPorte(
       pkg.procedureIds
-        .map(procId => procedures.find(item => item.id === procId))
+        .map(procId => procedureById.get(procId))
         .filter(Boolean) as typeof procedures
     );
 
@@ -551,42 +667,8 @@ export default function Packages() {
   };
 
   const handleSharePackage = async (packageId: string, toUserId: string, packageType: 'standard' | 'private') => {
-    if (!user?.id) return;
-
     try {
-      // Criar compartilhamento
-      const { error: shareError } = await supabase
-        .from('shared_packages')
-        .insert({
-          package_id: packageId,
-          package_type: packageType,
-          from_user_id: user.id,
-          to_user_id: toUserId,
-          status: 'pending',
-        });
-
-      if (shareError) throw shareError;
-
-      // Criar notificação
-      const pkg = packageType === 'private'
-        ? privatePackages.find(p => p.id === packageId)
-        : packages.find(p => p.id === packageId);
-      const { error: notifError } = await supabase
-        .from('notifications')
-        .insert({
-          user_id: toUserId,
-          type: 'package_share',
-          data: {
-            package_id: packageId,
-            package_name: pkg?.name,
-            package_type: packageType,
-            from_user_name: user.name,
-            from_user_id: user.id,
-          },
-        });
-
-      if (notifError) throw notifError;
-
+      await sharePackage(packageId, toUserId, packageType);
       toast({
         title: 'Pacote compartilhado',
         description: 'O usuário receberá uma notificação.',
@@ -601,93 +683,15 @@ export default function Packages() {
   };
 
   const handleAcceptShare = async (notificationId: string, shareData: any) => {
-    if (!user?.id) return;
-
     try {
-      console.log('Share data raw:', shareData, typeof shareData);
-      
-      // Parse se for string JSON
-      let parsedData = shareData;
-      if (typeof shareData === 'string') {
-        parsedData = JSON.parse(shareData);
+      await acceptShare(notificationId, shareData);
+      let packageType: 'standard' | 'private' = 'standard';
+      try {
+        const parsed = typeof shareData === 'string' ? JSON.parse(shareData) : shareData;
+        packageType = parsed?.package_type === 'private' ? 'private' : 'standard';
+      } catch {
+        packageType = 'standard';
       }
-      
-      console.log('Share data parsed:', parsedData);
-      
-      // Extrair o package_id de shareData
-      const packageId = parsedData?.package_id;
-      const packageType = parsedData?.package_type ?? 'standard';
-      console.log('Package ID extraído:', packageId);
-      
-      if (!packageId) {
-        throw new Error('ID do pacote não encontrado na notificação');
-      }
-
-      // Buscar pacote compartilhado
-      console.log('Buscando pacote com ID:', packageId);
-      const selectFields = packageType === 'private'
-        ? '*, private_package_procedures(procedure_code), private_package_opmes(opme_id)'
-        : '*, package_procedures(procedure_code)';
-
-      const { data: packageData, error: fetchError } = await supabase
-        .from(packageType === 'private' ? 'private_packages' : 'packages')
-        .select(selectFields)
-        .eq('id', packageId);
-
-      console.log('Resultado da busca:', { packageData, fetchError });
-      
-      if (fetchError) throw fetchError;
-      if (!packageData || packageData.length === 0) {
-        throw new Error(`Pacote com ID ${packageId} não encontrado`);
-      }
-
-      const sharedPkg = (packageData as any)?.[0];
-      console.log('Pacote encontrado:', sharedPkg);
-      console.log('Package procedures:', sharedPkg.package_procedures);
-
-      // Criar cópia do pacote para o usuário
-      const procedureIds = packageType === 'private'
-        ? sharedPkg.private_package_procedures?.map((p: any) => p.procedure_code) || []
-        : sharedPkg.package_procedures?.map((p: any) => p.procedure_code) || [];
-      console.log('Procedure IDs extraídos:', procedureIds);
-      
-      const payload = {
-        name: sharedPkg.name,
-        description: sharedPkg.description || '',
-        procedureIds: procedureIds,
-      };
-      
-      console.log('Payload para addPackage:', payload);
-
-      if (packageType === 'private') {
-        const opmeIds = sharedPkg.private_package_opmes?.map((o: any) => o.opme_id) || [];
-        await addPrivatePackage({
-          ...payload,
-          opmeIds,
-          surgeonValue: sharedPkg.surgeon_value ?? 0,
-          anesthetistValue: sharedPkg.anesthetist_value ?? 0,
-          assistantValue: sharedPkg.assistant_value ?? 0,
-        });
-      } else {
-        await addPackage(payload);
-      }
-
-      // Atualizar status do compartilhamento
-      const updateShare = supabase
-        .from('shared_packages')
-        .update({ status: 'accepted' })
-        .eq('package_id', packageId)
-        .eq('to_user_id', user.id);
-
-      if (packageType) {
-        updateShare.eq('package_type', packageType);
-      }
-
-      await updateShare;
-
-      // Deletar notificação
-      await deleteNotification(notificationId);
-
       toast({
         title: 'Pacote adicionado',
         description: packageType === 'private'
@@ -704,30 +708,8 @@ export default function Packages() {
   };
 
   const handleRejectShare = async (notificationId: string, shareData: any) => {
-    if (!user?.id) return;
-
     try {
-      let parsedData = shareData;
-      if (typeof shareData === 'string') {
-        parsedData = JSON.parse(shareData);
-      }
-
-      // Atualizar status do compartilhamento
-      const updateShare = supabase
-        .from('shared_packages')
-        .update({ status: 'rejected' })
-        .eq('package_id', parsedData.package_id)
-        .eq('to_user_id', user.id);
-
-      if (parsedData?.package_type) {
-        updateShare.eq('package_type', parsedData.package_type);
-      }
-
-      await updateShare;
-
-      // Deletar notificação
-      await deleteNotification(notificationId);
-
+      await rejectShare(notificationId, shareData);
       toast({
         title: 'Compartilhamento recusado',
         description: 'A solicitação foi removida.',
@@ -829,7 +811,7 @@ export default function Packages() {
                   {filteredPackages.map((pkg) => {
                     const proceduresList = sortProceduresByPorte(
                       pkg.procedureIds
-                        .map(procId => procedures.find(item => item.id === procId))
+                        .map(procId => procedureById.get(procId))
                         .filter(Boolean) as typeof procedures
                     );
 
@@ -1027,39 +1009,40 @@ export default function Packages() {
               )}
 
               {filteredProcedures.length > 0 && (
-                <div className="grid gap-3 max-h-96 overflow-y-auto pr-1">
-                  {orderedFilteredProcedures.map((procedure) => {
-                  const selected = selectedProcedures.includes(procedure.id);
-                  return (
-                    <button
-                      key={procedure.id}
-                      type="button"
-                      onClick={() => handleToggleProcedure(procedure.id)}
-                      className="text-left"
-                    >
-                      <Card className={selected ? 'border-primary' : ''}>
-                        <CardContent className="p-4 flex items-start gap-3">
-                          <Checkbox checked={selected} className="mt-1" />
-                          <div className="space-y-2">
-                            <div>
-                              <p className="font-semibold text-foreground">{procedure.name}</p>
-                              <p className="text-xs text-muted-foreground">TUSS: {procedure.codes.tuss}</p>
+                <div ref={standardListRef} className="grid gap-3 max-h-96 overflow-y-auto pr-1">
+                  {visibleStandardProcedures.map((procedure) => {
+                    const selected = selectedProcedures.includes(procedure.id);
+                    return (
+                      <button
+                        key={procedure.id}
+                        type="button"
+                        onClick={() => handleToggleProcedure(procedure.id)}
+                        className="text-left"
+                      >
+                        <Card className={selected ? 'border-primary' : ''}>
+                          <CardContent className="p-4 flex items-start gap-3">
+                            <Checkbox checked={selected} className="mt-1" />
+                            <div className="space-y-2">
+                              <div>
+                                <p className="font-semibold text-foreground">{procedure.name}</p>
+                                <p className="text-xs text-muted-foreground">TUSS: {procedure.codes.tuss}</p>
+                              </div>
+                              <div className="flex flex-wrap gap-1">
+                                <Badge variant="secondary" className="text-xs">
+                                  {regionLabels[procedure.region]}
+                                </Badge>
+                                <Badge variant="outline" className="text-xs">
+                                  {typeLabels[procedure.type]}
+                                </Badge>
+                              </div>
                             </div>
-                            <div className="flex flex-wrap gap-1">
-                              <Badge variant="secondary" className="text-xs">
-                                {regionLabels[procedure.region]}
-                              </Badge>
-                              <Badge variant="outline" className="text-xs">
-                                {typeLabels[procedure.type]}
-                              </Badge>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </button>
-                  );
-                })}
-              </div>
+                          </CardContent>
+                        </Card>
+                      </button>
+                    );
+                  })}
+                  <div ref={standardSentinelRef} className="h-6" />
+                </div>
               )}
 
               {filteredProcedures.length === 0 && (
@@ -1134,7 +1117,7 @@ export default function Packages() {
                   {filteredPrivatePackages.map((pkg) => {
                     const proceduresList = sortProceduresByPorte(
                       pkg.procedureIds
-                        .map(procId => procedures.find(item => item.id === procId))
+                        .map(procId => procedureById.get(procId))
                         .filter(Boolean) as typeof procedures
                     );
 
@@ -1306,39 +1289,42 @@ export default function Packages() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">OPMEs</label>
-                    {opmes.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">
-                        Nenhum OPME cadastrado. Cadastre na aba OPME para selecionar.
-                      </p>
-                    ) : (
-                      <div className="grid gap-2 max-h-40 overflow-y-auto pr-1">
-                        {opmes.map((item) => {
-                          const selected = privateSelectedOpmes.includes(item.id);
-                          return (
-                            <button
-                              key={item.id}
-                              type="button"
-                              onClick={() => handleTogglePrivateOpme(item.id)}
-                              className="text-left"
-                            >
-                              <Card className={selected ? 'border-primary' : ''}>
-                                <CardContent className="p-3 flex items-start gap-3">
-                                  <Checkbox checked={selected} className="mt-1" />
-                                  <div>
-                                    <p className="text-sm font-semibold text-foreground">{item.name}</p>
-                                    <p className="text-xs text-muted-foreground">
-                                      {formatCurrency(item.value)}
-                                    </p>
-                                    {item.description && (
-                                      <p className="text-xs text-muted-foreground mt-1">{item.description}</p>
-                                    )}
-                                  </div>
-                                </CardContent>
-                              </Card>
-                            </button>
-                          );
-                        })}
+                    <label className="text-sm font-medium text-foreground">OPME</label>
+                    <RadioGroup
+                      className="flex gap-4"
+                      value={privateOpmeEnabled ? 'yes' : 'no'}
+                      onValueChange={(value) => {
+                        const enabled = value === 'yes';
+                        setPrivateOpmeEnabled(enabled);
+                        if (!enabled) {
+                          setPrivateSelectedOpmes([]);
+                        }
+                      }}
+                    >
+                      <label className="flex items-center gap-2 text-sm">
+                        <RadioGroupItem value="yes" />
+                        Sim
+                      </label>
+                      <label className="flex items-center gap-2 text-sm">
+                        <RadioGroupItem value="no" />
+                        Não
+                      </label>
+                    </RadioGroup>
+
+                    {privateOpmeEnabled && (
+                      <div className="flex items-center justify-between gap-3 pt-1">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="gap-2"
+                          onClick={() => setShowOpmeSelect(true)}
+                        >
+                          <Clipboard className="h-4 w-4" />
+                          Selecionar OPME
+                        </Button>
+                        <span className="text-sm text-muted-foreground">
+                          {privateSelectedOpmes.length} selecionado{privateSelectedOpmes.length !== 1 ? 's' : ''}
+                        </span>
                       </div>
                     )}
                   </div>
@@ -1435,8 +1421,8 @@ export default function Packages() {
                   )}
 
                   {filteredPrivateProcedures.length > 0 && (
-                    <div className="grid gap-3 max-h-96 overflow-y-auto pr-1">
-                      {orderedFilteredPrivateProcedures.map((procedure) => {
+                    <div ref={privateListRef} className="grid gap-3 max-h-96 overflow-y-auto pr-1">
+                      {visiblePrivateProcedures.map((procedure) => {
                         const selected = privateSelectedProcedures.includes(procedure.id);
                         return (
                           <button
@@ -1467,6 +1453,7 @@ export default function Packages() {
                           </button>
                         );
                       })}
+                      <div ref={privateSentinelRef} className="h-6" />
                     </div>
                   )}
 
@@ -1596,299 +1583,47 @@ export default function Packages() {
 
       <BottomNav />
 
-      {/* Modal de notificações */}
-      {showNotifications && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-20 px-4"
-          onClick={() => setShowNotifications(false)}
-        >
-          <Card 
-            className="w-full max-w-md max-h-[70vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <CardHeader className="sticky top-0 bg-card border-b">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Notificações</CardTitle>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setShowNotifications(false)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="p-4 space-y-3">
-              {notifications.length === 0 ? (
-                <p className="text-center text-sm text-muted-foreground py-8">
-                  Nenhuma notificação
-                </p>
-              ) : (
-                notifications.map((notification) => {
-                  if (notification.type === 'package_share') {
-                    return (
-                      <Card key={notification.id} className={notification.read ? 'bg-muted/30' : 'border-primary'}>
-                        <CardContent className="p-4 space-y-3">
-                          <div className="space-y-1">
-                            <p className="text-sm font-medium">
-                              {notification.data.from_user_name} compartilhou um{' '}
-                              {notification.data.package_type === 'private' ? 'pacote particular' : 'pacote'}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              {notification.data.package_name}
-                            </p>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button
-                              size="sm"
-                              className="flex-1 gap-2"
-                              onClick={() => {
-                                handleAcceptShare(notification.id, notification.data);
-                                setShowNotifications(false);
-                              }}
-                            >
-                              <Check className="h-4 w-4" />
-                              Adicionar
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="flex-1"
-                              onClick={() => handleRejectShare(notification.id, notification.data)}
-                            >
-                              Recusar
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  }
-                  return null;
-                })
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      )}
+      <NotificationsModal
+        open={showNotifications}
+        notifications={notifications}
+        onClose={() => setShowNotifications(false)}
+        onAccept={(id, data) => {
+          handleAcceptShare(id, data);
+          setShowNotifications(false);
+        }}
+        onReject={(id, data) => handleRejectShare(id, data)}
+      />
 
-      {/* Modal de detalhes do pacote */}
-      {viewingPackage && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4 safe-area-bottom">
-          <Card className="w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto">
-            <CardHeader className="sticky top-0 bg-card border-b flex flex-row items-center justify-between space-y-0">
-              <CardTitle>{viewingPackage.name}</CardTitle>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setViewingPackageId(null)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              {viewingPackage.description && (
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-foreground">Descrição</h3>
-                  <p className="text-sm text-muted-foreground">{viewingPackage.description}</p>
-                </div>
-              )}
+      <OpmeSelectModal
+        open={showOpmeSelect}
+        opmes={opmes}
+        selectedIds={privateSelectedOpmes}
+        onToggle={handleTogglePrivateOpme}
+        onClose={() => setShowOpmeSelect(false)}
+        formatCurrency={formatCurrency}
+      />
 
-              <div className="space-y-2">
-                <h3 className="font-semibold text-foreground">Procedimentos ({viewingProcedures.length})</h3>
-                <div className="space-y-3">
-                  {viewingProcedures.map((procedure) => (
-                    <Card key={procedure!.id} className="border">
-                      <CardContent className="p-4 space-y-2">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex-1">
-                            <p className="font-semibold text-foreground">{procedure!.name}</p>
-                            <div className="space-y-1 mt-2">
-                              {procedure!.codes.tuss && (
-                                <p className="text-xs text-muted-foreground">
-                                  <span className="font-medium">TUSS:</span> {procedure!.codes.tuss}
-                                  <span className="mx-2">•</span>
-                                  <span className="font-medium">Porte:</span> {procedure!.porte || '-'}
-                                </p>
-                              )}
-                              {procedure!.anestheticPort && procedure!.anestheticPort !== '0' && (
-                                <p className="text-xs text-muted-foreground">
-                                  <span className="font-medium">Porte Anestésico:</span> {procedure!.anestheticPort}
-                                </p>
-                              )}
-                              {procedure!.codes.cbhpm && (
-                                <p className="text-xs text-muted-foreground">
-                                  <span className="font-medium">CBHPM:</span> {procedure!.codes.cbhpm}
-                                </p>
-                              )}
-                              {procedure!.codes.sus && (
-                                <p className="text-xs text-muted-foreground">
-                                  <span className="font-medium">SUS:</span> {procedure!.codes.sus}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex flex-wrap gap-1">
-                          <Badge variant="secondary" className="text-xs">
-                            {regionLabels[procedure!.region]}
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            {typeLabels[procedure!.type]}
-                          </Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
+      <PackageDetailModal
+        packageData={viewingPackage}
+        procedures={viewingProcedures}
+        onCopy={(id) => {
+          handleCopyCodes(id);
+          setViewingPackageId(null);
+        }}
+        onClose={() => setViewingPackageId(null)}
+      />
 
-              <div className="flex gap-2 pt-4 border-t">
-                <Button
-                  variant="outline"
-                  className="flex-1 gap-2"
-                  onClick={() => {
-                    handleCopyCodes(viewingPackage.id);
-                    setViewingPackageId(null);
-                  }}
-                >
-                  <Clipboard className="h-4 w-4" />
-                  Copiar códigos
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="flex-1"
-                  onClick={() => setViewingPackageId(null)}
-                >
-                  Fechar
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-      {viewingPrivatePackage && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4 safe-area-bottom">
-          <Card className="w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto">
-            <CardHeader className="sticky top-0 bg-card border-b flex flex-row items-center justify-between space-y-0">
-              <CardTitle>{viewingPrivatePackage.name}</CardTitle>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setViewingPrivatePackageId(null)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              {viewingPrivatePackage.description && (
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-foreground">Descrição</h3>
-                  <p className="text-sm text-muted-foreground">{viewingPrivatePackage.description}</p>
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <h3 className="font-semibold text-foreground">Valores do pacote</h3>
-                <div className="grid gap-2 sm:grid-cols-3">
-                  <div className="p-3 bg-muted rounded-lg text-center">
-                    <p className="text-xs text-muted-foreground">Cirurgião</p>
-                    <p className="text-sm font-semibold text-foreground">{formatCurrency(viewingPrivatePackage.surgeonValue)}</p>
-                  </div>
-                  <div className="p-3 bg-muted rounded-lg text-center">
-                    <p className="text-xs text-muted-foreground">Anestesista</p>
-                    <p className="text-sm font-semibold text-foreground">{formatCurrency(viewingPrivatePackage.anesthetistValue)}</p>
-                  </div>
-                  <div className="p-3 bg-muted rounded-lg text-center">
-                    <p className="text-xs text-muted-foreground">Auxiliar</p>
-                    <p className="text-sm font-semibold text-foreground">{formatCurrency(viewingPrivatePackage.assistantValue)}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="font-semibold text-foreground">OPMEs ({viewingPrivateOpmes.length})</h3>
-                {viewingPrivateOpmes.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">Nenhum OPME selecionado.</p>
-                ) : (
-                  <div className="space-y-2">
-                    {viewingPrivateOpmes.map((item) => (
-                      <Card key={item.id} className="border">
-                        <CardContent className="p-4">
-                          <p className="font-semibold text-foreground">{item.name}</p>
-                          <p className="text-xs text-muted-foreground">{formatCurrency(item.value)}</p>
-                          {item.description && (
-                            <p className="text-xs text-muted-foreground mt-1">{item.description}</p>
-                          )}
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="font-semibold text-foreground">Procedimentos ({viewingPrivateProcedures.length})</h3>
-                <div className="space-y-3">
-                  {viewingPrivateProcedures.map((procedure) => (
-                    <Card key={procedure!.id} className="border">
-                      <CardContent className="p-4 space-y-2">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex-1">
-                            <p className="font-semibold text-foreground">{procedure!.name}</p>
-                            <div className="space-y-1 mt-2">
-                              {procedure!.codes.tuss && (
-                                <p className="text-xs text-muted-foreground">
-                                  <span className="font-medium">TUSS:</span> {procedure!.codes.tuss}
-                                  <span className="mx-2">•</span>
-                                  <span className="font-medium">Porte:</span> {procedure!.porte || '-'}
-                                </p>
-                              )}
-                              {procedure!.anestheticPort && procedure!.anestheticPort !== '0' && (
-                                <p className="text-xs text-muted-foreground">
-                                  <span className="font-medium">Porte Anestésico:</span> {procedure!.anestheticPort}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex flex-wrap gap-1">
-                          <Badge variant="secondary" className="text-xs">
-                            {regionLabels[procedure!.region]}
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            {typeLabels[procedure!.type]}
-                          </Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex gap-2 pt-4 border-t">
-                <Button
-                  variant="outline"
-                  className="flex-1 gap-2"
-                  onClick={() => {
-                    handleCopyPrivatePackage(viewingPrivatePackage.id);
-                    setViewingPrivatePackageId(null);
-                  }}
-                >
-                  <Clipboard className="h-4 w-4" />
-                  Copiar pacote
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="flex-1"
-                  onClick={() => setViewingPrivatePackageId(null)}
-                >
-                  Fechar
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+      <PrivatePackageDetailModal
+        packageData={viewingPrivatePackage}
+        procedures={viewingPrivateProcedures}
+        opmes={viewingPrivateOpmes}
+        formatCurrency={formatCurrency}
+        onCopy={(id) => {
+          handleCopyPrivatePackage(id);
+          setViewingPrivatePackageId(null);
+        }}
+        onClose={() => setViewingPrivatePackageId(null)}
+      />
     </div>
   );
 }

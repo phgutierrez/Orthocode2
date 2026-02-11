@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useMemo } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 
@@ -11,105 +12,97 @@ export interface Notification {
   createdAt: string;
 }
 
+async function fetchNotifications(userId: string) {
+  const { data, error } = await supabase
+    .from('notifications')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+
+  return (data || []).map((n) => ({
+    id: n.id,
+    userId: n.user_id,
+    type: n.type,
+    data: n.data,
+    read: n.read,
+    createdAt: n.created_at,
+  })) as Notification[];
+}
+
 export function useNotifications() {
   const { user } = useAuth();
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const queryClient = useQueryClient();
+  const queryKey = ['notifications', user?.id];
 
-  const fetchNotifications = useCallback(async () => {
-    if (!user?.id) return;
+  const { data, isLoading } = useQuery<Notification[]>({
+    queryKey,
+    queryFn: () => fetchNotifications(user!.id),
+    enabled: Boolean(user?.id),
+  });
 
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('notifications')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Erro ao carregar notificações:', error);
-        return;
-      }
-
-      const mapped = (data || []).map(n => ({
-        id: n.id,
-        userId: n.user_id,
-        type: n.type,
-        data: n.data,
-        read: n.read,
-        createdAt: n.created_at,
-      }));
-
-      setNotifications(mapped);
-      setUnreadCount(mapped.filter(n => !n.read).length);
-    } catch (error) {
-      console.error('Erro ao carregar notificações:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [user?.id]);
-
-  useEffect(() => {
-    fetchNotifications();
-  }, [fetchNotifications]);
-
-  const markAsRead = useCallback(async (id: string) => {
-    if (!user?.id) return;
-
-    try {
+  const markAsReadMutation = useMutation({
+    mutationFn: async (id: string) => {
       const { error } = await supabase
         .from('notifications')
         .update({ read: true })
         .eq('id', id)
-        .eq('user_id', user.id);
+        .eq('user_id', user!.id);
 
-      if (error) {
-        console.error('Erro ao marcar notificação como lida:', error);
-        return;
-      }
-
-      setNotifications(prev =>
-        prev.map(n => (n.id === id ? { ...n, read: true } : n))
+      if (error) throw error;
+      return id;
+    },
+    onSuccess: (id) => {
+      queryClient.setQueryData<Notification[]>(queryKey, (prev) =>
+        (prev || []).map((n) => (n.id === id ? { ...n, read: true } : n))
       );
-      setUnreadCount(prev => Math.max(0, prev - 1));
-    } catch (error) {
-      console.error('Erro ao marcar notificação como lida:', error);
-    }
-  }, [user?.id]);
+    },
+  });
 
-  const deleteNotification = useCallback(async (id: string) => {
-    if (!user?.id) return;
-
-    try {
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
       const { error } = await supabase
         .from('notifications')
         .delete()
         .eq('id', id)
-        .eq('user_id', user.id);
+        .eq('user_id', user!.id);
 
-      if (error) {
-        console.error('Erro ao deletar notificação:', error);
-        return;
-      }
+      if (error) throw error;
+      return id;
+    },
+    onSuccess: (id) => {
+      queryClient.setQueryData<Notification[]>(queryKey, (prev) =>
+        (prev || []).filter((n) => n.id !== id)
+      );
+    },
+  });
 
-      const notification = notifications.find(n => n.id === id);
-      setNotifications(prev => prev.filter(n => n.id !== id));
-      if (notification && !notification.read) {
-        setUnreadCount(prev => Math.max(0, prev - 1));
-      }
-    } catch (error) {
-      console.error('Erro ao deletar notificação:', error);
-    }
-  }, [user?.id, notifications]);
+  const markAsRead = useCallback(
+    async (id: string) => {
+      if (!user?.id) return;
+      await markAsReadMutation.mutateAsync(id);
+    },
+    [markAsReadMutation, user?.id]
+  );
+
+  const deleteNotification = useCallback(
+    async (id: string) => {
+      if (!user?.id) return;
+      await deleteMutation.mutateAsync(id);
+    },
+    [deleteMutation, user?.id]
+  );
+
+  const notifications = data || [];
+  const unreadCount = useMemo(() => notifications.filter((n) => !n.read).length, [notifications]);
 
   return {
     notifications,
-    loading,
+    loading: isLoading,
     unreadCount,
     markAsRead,
     deleteNotification,
-    refetch: fetchNotifications,
+    refetch: () => queryClient.invalidateQueries({ queryKey }),
   };
 }

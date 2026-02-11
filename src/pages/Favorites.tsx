@@ -14,14 +14,18 @@ export default function Favorites() {
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
   const { procedures, loading } = useProcedures();
 
+  const procedureById = useMemo(() => {
+    return new Map(procedures.map((procedure) => [procedure.id, procedure]));
+  }, [procedures]);
+
   const favoriteProcedures = useMemo(() => {
-    if (!Array.isArray(favorites) || !Array.isArray(procedures)) {
+    if (!Array.isArray(favorites)) {
       return [];
     }
     return favorites
-      .map(id => procedures.find(p => p.id === id))
+      .map((id) => procedureById.get(id))
       .filter(Boolean) as Procedure[];
-  }, [favorites, procedures]);
+  }, [favorites, procedureById]);
 
   if (loading) {
     return (

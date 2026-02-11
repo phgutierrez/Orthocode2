@@ -1,15 +1,32 @@
 import { Procedure } from '@/types/procedure';
 
 let cachedProcedures: Procedure[] | null = null;
+let cachedPromise: Promise<Procedure[]> | null = null;
 
 export async function loadProcedures(): Promise<Procedure[]> {
   if (cachedProcedures) {
     return cachedProcedures;
   }
-  
-  const response = await fetch('/data/procedures.json');
-  cachedProcedures = await response.json();
-  return cachedProcedures;
+
+  if (cachedPromise) {
+    return cachedPromise;
+  }
+
+  cachedPromise = (async () => {
+    const response = await fetch('/data/procedures.json');
+    if (!response.ok) {
+      throw new Error(`Failed to load procedures: ${response.status}`);
+    }
+    const data = await response.json();
+    cachedProcedures = Array.isArray(data) ? data : [];
+    return cachedProcedures;
+  })();
+
+  try {
+    return await cachedPromise;
+  } finally {
+    cachedPromise = null;
+  }
 }
 
 export function searchProcedures(procedures: Procedure[], query: string, filters?: { region?: string; type?: string }) {

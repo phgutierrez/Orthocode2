@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 
 export interface UserBasic {
@@ -7,40 +8,33 @@ export interface UserBasic {
   email: string;
 }
 
+async function fetchUsers() {
+  const { data, error } = await supabase
+    .from('users')
+    .select('id, name, email')
+    .order('name');
+
+  if (error) throw error;
+
+  const uniqueUsers = data
+    ? data.filter((u, index, self) => index === self.findIndex((t) => t.id === u.id))
+    : [];
+
+  return uniqueUsers as UserBasic[];
+}
+
 export function useUsers() {
-  const [users, setUsers] = useState<UserBasic[]>([]);
-  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
+  const queryKey = ['users'];
 
-  const fetchUsers = useCallback(async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('users')
-        .select('id, name, email')
-        .order('name');
+  const { data, isLoading } = useQuery<UserBasic[]>({
+    queryKey,
+    queryFn: fetchUsers,
+  });
 
-      if (error) {
-        console.error('Erro ao carregar usuários:', error);
-        return;
-      }
+  const refetch = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey });
+  }, [queryClient]);
 
-      console.log('Usuários carregados do banco:', data);
-      // Remove duplicates by id
-      const uniqueUsers = data ? data.filter((u, index, self) => 
-        index === self.findIndex((t) => t.id === u.id)
-      ) : [];
-      console.log('Usuários após deduplicação:', uniqueUsers);
-      setUsers(uniqueUsers);
-    } catch (error) {
-      console.error('Erro ao carregar usuários:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  return { users, loading, refetch: fetchUsers };
+  return { users: data || [], loading: isLoading, refetch };
 }

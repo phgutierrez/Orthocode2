@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { searchProcedures, loadProcedures } from '@/data/procedures';
 import { Procedure } from '@/types/procedure';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -18,6 +19,7 @@ export function SearchBar({ onSearch, onSelectProcedure, placeholder = 'Buscar p
   const [procedures, setProcedures] = useState<Procedure[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const debouncedQuery = useDebounce(query, 200);
 
   useEffect(() => {
     loadProcedures().then(setProcedures).catch(err => {
@@ -27,15 +29,15 @@ export function SearchBar({ onSearch, onSelectProcedure, placeholder = 'Buscar p
   }, []);
 
   useEffect(() => {
-    if (query.length >= 2 && Array.isArray(procedures)) {
-      const results = searchProcedures(procedures, query).slice(0, 5);
+    if (debouncedQuery.length >= 2 && Array.isArray(procedures)) {
+      const results = searchProcedures(procedures, debouncedQuery).slice(0, 5);
       setSuggestions(results);
       setShowSuggestions(true);
     } else {
       setSuggestions([]);
       setShowSuggestions(false);
     }
-  }, [query, procedures]);
+  }, [debouncedQuery, procedures]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
