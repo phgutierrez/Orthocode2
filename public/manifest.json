@@ -1,6 +1,6 @@
 {
-  "name": "Pacote TUSS - Gerenciador de Procedimentos Médicos",
-  "short_name": "Pacote TUSS",
+  "name": "Pacotes TUSS - Gerenciador de Procedimentos Médicos",
+  "short_name": "Pacotes TUSS",
   "description": "Gerenciador completo de códigos TUSS com filtros por tipo, região, porte e pacotes personalizados",
   "start_url": "/",
   "display": "standalone",
@@ -21,6 +21,10 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["medical", "health", "utilities"],
+  "categories": [
+    "medical",
+    "health",
+    "utilities"
+  ],
   "lang": "pt-BR"
 }
