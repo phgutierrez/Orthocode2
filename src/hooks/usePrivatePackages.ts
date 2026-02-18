@@ -13,11 +13,14 @@ async function fetchPrivatePackages(userId: string) {
 
   if (error) throw error;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (data || []).map((pkg: any) => ({
     id: pkg.id,
     name: pkg.name,
     description: pkg.description ?? undefined,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     procedureIds: pkg.private_package_procedures?.map((p: any) => p.procedure_code) || [],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     opmeIds: pkg.private_package_opmes?.map((o: any) => o.opme_id) || [],
     surgeonValue: pkg.surgeon_value ?? 0,
     anesthetistValue: pkg.anesthetist_value ?? 0,

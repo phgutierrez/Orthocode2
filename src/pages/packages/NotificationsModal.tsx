@@ -7,8 +7,8 @@ interface NotificationsModalProps {
   open: boolean;
   notifications: Notification[];
   onClose: () => void;
-  onAccept: (notificationId: string, data: any) => void;
-  onReject: (notificationId: string, data: any) => void;
+  onAccept: (notificationId: string, data: Notification['data']) => void;
+  onReject: (notificationId: string, data: Notification['data']) => void;
 }
 
 export function NotificationsModal({

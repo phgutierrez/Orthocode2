@@ -1,6 +1,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import type { PrivatePackage, ProcedurePackage } from '@/types/package';
+import type { NotificationData } from './useNotifications';
 
 interface UsePackageSharingProps {
   packages: ProcedurePackage[];
@@ -55,16 +56,16 @@ export function usePackageSharing({
     if (notifError) throw notifError;
   };
 
-  const acceptShare = async (notificationId: string, shareData: any) => {
+  const acceptShare = async (notificationId: string, shareData: NotificationData | unknown) => {
     if (!user?.id) return;
 
     let parsedData = shareData;
     if (typeof shareData === 'string') {
       parsedData = JSON.parse(shareData);
     }
-
-    const packageId = parsedData?.package_id;
-    const packageType = parsedData?.package_type ?? 'standard';
+    const data = parsedData as NotificationData;
+    const packageId = data?.package_id;
+    const packageType = data?.package_type ?? 'standard';
 
     if (!packageId) {
       throw new Error('ID do pacote não encontrado na notificação');
@@ -84,10 +85,11 @@ export function usePackageSharing({
       throw new Error(`Pacote com ID ${packageId} não encontrado`);
     }
 
-    const sharedPkg = (packageData as any)[0];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sharedPkg = (packageData as any[])[0];
     const procedureIds = packageType === 'private'
-      ? sharedPkg.private_package_procedures?.map((p: any) => p.procedure_code) || []
-      : sharedPkg.package_procedures?.map((p: any) => p.procedure_code) || [];
+      ? sharedPkg.private_package_procedures?.map((p: { procedure_code: string }) => p.procedure_code) || []
+      : sharedPkg.package_procedures?.map((p: { procedure_code: string }) => p.procedure_code) || [];
 
     const payload = {
       name: sharedPkg.name,
@@ -96,7 +98,7 @@ export function usePackageSharing({
     };
 
     if (packageType === 'private') {
-      const opmeIds = sharedPkg.private_package_opmes?.map((o: any) => o.opme_id) || [];
+      const opmeIds = sharedPkg.private_package_opmes?.map((o: { opme_id: string }) => o.opme_id) || [];
       await addPrivatePackage({
         ...payload,
         opmeIds,
@@ -122,22 +124,23 @@ export function usePackageSharing({
     await deleteNotification(notificationId);
   };
 
-  const rejectShare = async (notificationId: string, shareData: any) => {
+  const rejectShare = async (notificationId: string, shareData: NotificationData | unknown) => {
     if (!user?.id) return;
 
     let parsedData = shareData;
     if (typeof shareData === 'string') {
       parsedData = JSON.parse(shareData);
     }
+    const data = parsedData as NotificationData;
 
     const updateShare = supabase
       .from('shared_packages')
       .update({ status: 'rejected' })
-      .eq('package_id', parsedData.package_id)
+      .eq('package_id', data?.package_id)
       .eq('to_user_id', user.id);
 
-    if (parsedData?.package_type) {
-      updateShare.eq('package_type', parsedData.package_type);
+    if (data?.package_type) {
+      updateShare.eq('package_type', data.package_type);
     }
 
     await updateShare;

@@ -151,8 +151,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             });
         }
       }
-    } catch (error: any) {
-      throw new Error(error.message || 'Erro ao fazer login');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Erro ao fazer login';
+      throw new Error(message);
     }
   };
 
@@ -208,8 +209,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           name,
         });
       }
-    } catch (error: any) {
-      throw new Error(error.message || 'Erro ao criar conta');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Erro ao criar conta';
+      throw new Error(message);
     }
   };
 
@@ -218,8 +220,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       setUser(null);
-    } catch (error: any) {
-      throw new Error(error.message || 'Erro ao fazer logout');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Erro ao fazer logout';
+      throw new Error(message);
     }
   };
 

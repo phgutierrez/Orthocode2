@@ -15,10 +15,12 @@ async function fetchPackages(userId: string) {
     throw error;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (data || []).map((pkg: any) => ({
     id: pkg.id,
     name: pkg.name,
     description: pkg.description ?? undefined,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     procedureIds: pkg.package_procedures?.map((p: any) => p.procedure_code) || [],
     createdAt: pkg.created_at,
     updatedAt: pkg.updated_at,

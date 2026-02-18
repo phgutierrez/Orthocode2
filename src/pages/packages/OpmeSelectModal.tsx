@@ -45,6 +45,7 @@ export function OpmeSelectModal({
 
         <div className="space-y-3">
           <Input
+            id="opme-select-search"
             placeholder="Buscar OPME..."
             value={query}
             onChange={(event) => setQuery(event.target.value)}
@@ -59,15 +60,26 @@ export function OpmeSelectModal({
               {filtered.map((item) => {
                 const selected = selectedIds.includes(item.id);
                 return (
-                  <button
+                  <div
                     key={item.id}
-                    type="button"
+                    role="button"
+                    tabIndex={0}
                     onClick={() => onToggle(item.id)}
-                    className="text-left"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        onToggle(item.id);
+                      }
+                    }}
+                    className="text-left cursor-pointer"
                   >
                     <Card className={selected ? 'border-primary' : ''}>
                       <CardContent className="p-3 flex items-start gap-3">
-                        <Checkbox checked={selected} className="mt-1" />
+                        <Checkbox
+                          checked={selected}
+                          className="mt-1 pointer-events-none"
+                          aria-hidden="true"
+                        />
                         <div>
                           <p className="text-sm font-semibold text-foreground">{item.name}</p>
                           <p className="text-xs text-muted-foreground">
@@ -81,7 +93,7 @@ export function OpmeSelectModal({
                         </div>
                       </CardContent>
                     </Card>
-                  </button>
+                  </div>
                 );
               })}
             </div>

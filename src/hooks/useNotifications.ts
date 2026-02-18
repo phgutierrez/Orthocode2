@@ -3,11 +3,20 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 
+
+export interface NotificationData {
+  from_user_name: string;
+  package_type: 'standard' | 'private';
+  package_name: string;
+  package_id?: string;
+  [key: string]: unknown; // Allow for other potential properties but keep it safer than any
+}
+
 export interface Notification {
   id: string;
   userId: string;
   type: string;
-  data: any;
+  data: NotificationData;
   read: boolean;
   createdAt: string;
 }
