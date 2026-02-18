@@ -173,6 +173,38 @@
     );
   }
 
+  /* Dark mode enhanced gradients */
+  .dark .medical-gradient-radial {
+    background: radial-gradient(ellipse at top,
+      hsl(224 76% 18%) 0%,
+      hsl(var(--background)) 60%
+    );
+  }
+
+  .dark-gradient-card {
+    background: linear-gradient(135deg,
+      hsl(222 47% 17%) 0%,
+      hsl(224 60% 14%) 100%
+    );
+    border-color: hsl(224 40% 22%);
+  }
+
+  .dark .dark-gradient-card {
+    background: linear-gradient(135deg,
+      hsl(222 47% 17%) 0%,
+      hsl(224 60% 14%) 100%
+    );
+    border-color: hsl(224 40% 22%);
+  }
+
+  .dark-glow-primary {
+    box-shadow: 0 0 20px hsl(214 95% 70% / 0.15), 0 0 40px hsl(214 95% 70% / 0.05);
+  }
+
+  .dark .dark-glow-primary {
+    box-shadow: 0 0 20px hsl(214 95% 70% / 0.25), 0 0 60px hsl(214 95% 70% / 0.1);
+  }
+
   .glass-effect {
     backdrop-filter: blur(10px);
     background: hsl(var(--background) / 0.8);
@@ -249,5 +281,74 @@
 
   .card-hover:active {
     transform: translateY(-2px);
+  }
+
+  .dark .card-hover:hover {
+    box-shadow: 0 12px 40px 0 hsl(214 95% 70% / 0.15);
+  }
+
+  /* Ripple effect for buttons */
+  .ripple-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ripple-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--ripple-x, 50%) var(--ripple-y, 50%), currentColor 0%, transparent 70%);
+    opacity: 0;
+    transform: scale(0);
+    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+  }
+
+  .ripple-container:active::after {
+    opacity: 0.12;
+    transform: scale(2.5);
+    transition: transform 0s, opacity 0s;
+  }
+
+  /* Drag and drop styles */
+  .dragging-card {
+    opacity: 0.4;
+    cursor: grabbing;
+  }
+
+  .drag-overlay-card {
+    opacity: 0.95;
+    transform: scale(1.03) rotate(1deg);
+    box-shadow: 0 20px 60px 0 rgba(31, 38, 135, 0.3);
+    cursor: grabbing;
+    z-index: 999;
+  }
+
+  .dark .drag-overlay-card {
+    box-shadow: 0 20px 60px 0 hsl(214 95% 70% / 0.2);
+  }
+
+  .drag-handle {
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .drag-handle:active {
+    cursor: grabbing;
+  }
+
+  /* Animate in for new items */
+  .animate-slide-in-right {
+    animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes slideInRight {
+    from {
+      transform: translateX(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
 }
