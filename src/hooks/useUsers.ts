@@ -10,7 +10,7 @@ export interface UserBasic {
 
 async function fetchUsers() {
   const { data, error } = await supabase
-    .from('users')
+    .from('users_packages')
     .select('id, name, email')
     .order('name');
 

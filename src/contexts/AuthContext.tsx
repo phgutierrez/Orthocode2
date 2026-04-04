@@ -33,7 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const email = session.user.email || '';
 
         const { data: profile, error } = await supabase
-          .from('users')
+          .from('users_packages')
           .select('*')
           .eq('id', session.user.id)
           .single();
@@ -46,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           });
         } else if (error?.code === 'PGRST116' && isMounted) {
           await supabase
-            .from('users')
+            .from('users_packages')
             .insert({
               id: session.user.id,
               email,
@@ -130,7 +130,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         // Buscar perfil do usuário
         const { data: profile } = await supabase
-          .from('users')
+          .from('users_packages')
           .select('*')
           .eq('id', data.user.id)
           .single();
@@ -143,7 +143,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           });
         } else {
           await supabase
-            .from('users')
+            .from('users_packages')
             .upsert({
               id: data.user.id,
               email,
@@ -190,9 +190,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (data.user) {
-        // Criar perfil do usuário na tabela 'users'
+        // Criar perfil do usuário na tabela 'users_packages'
         const { error: profileError } = await supabase
-          .from('users')
+          .from('users_packages')
           .insert({
             id: data.user.id,
             email: data.user.email,
