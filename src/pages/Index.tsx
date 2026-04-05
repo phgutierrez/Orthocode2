@@ -7,7 +7,9 @@ import { ProcedureCard } from '@/components/ProcedureCard';
 import { FilterChips } from '@/components/FilterChips';
 import { BottomNav } from '@/components/BottomNav';
 import { PageShell } from '@/components/PageShell';
+import { SidebarNav } from '@/components/SidebarNav';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { searchProcedures } from '@/data/procedures';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useProcedures } from '@/hooks/useProcedures';
@@ -72,7 +74,7 @@ export default function Index() {
     <>
       <PageShell
         header={
-          <div className="space-y-6 text-center">
+          <div className="space-y-6 text-center max-w-2xl mx-auto">
             <div className="flex items-center justify-center">
               <Logo size="lg" />
             </div>
@@ -83,8 +85,26 @@ export default function Index() {
           </div>
         }
         headerClassName="bg-muted/30"
-        containerClassName="max-w-2xl"
+        containerClassName="max-w-6xl"
         mainClassName="pt-6 pb-24"
+        sidebar={<SidebarNav />}
+        context={
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-muted-foreground">Resumo rapido</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Favoritos</span>
+                <span className="font-medium">{favorites.length}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Resultados</span>
+                <span className="font-medium">{showResults ? results.length : 0}</span>
+              </div>
+            </CardContent>
+          </Card>
+        }
       >
         <div className="space-y-6">
           {/* Filters */}

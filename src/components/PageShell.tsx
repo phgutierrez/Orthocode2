@@ -8,6 +8,8 @@ interface PageShellProps {
   headerClassName?: string;
   containerClassName?: string;
   mainClassName?: string;
+  sidebar?: ReactNode;
+  context?: ReactNode;
 }
 
 export function PageShell({
@@ -17,6 +19,8 @@ export function PageShell({
   headerClassName,
   containerClassName,
   mainClassName,
+  sidebar,
+  context,
 }: PageShellProps) {
   return (
     <div className={cn("min-h-screen bg-background", className)}>
@@ -35,7 +39,23 @@ export function PageShell({
       )}
 
       <main className={cn("mx-auto w-full px-4 sm:px-6 py-6", containerClassName, mainClassName)}>
-        {children}
+        {sidebar || context ? (
+          <div className="md:grid md:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[220px_minmax(0,1fr)_280px] md:gap-6">
+            {sidebar && (
+              <aside className="hidden md:block">
+                {sidebar}
+              </aside>
+            )}
+            <section>{children}</section>
+            {context && (
+              <aside className="hidden xl:block">
+                {context}
+              </aside>
+            )}
+          </div>
+        ) : (
+          children
+        )}
       </main>
     </div>
   );

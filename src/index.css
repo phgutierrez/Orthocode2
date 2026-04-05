@@ -8,7 +8,7 @@
   :root {
     /* Clinical Minimal Theme */
     --background: 210 33% 98%;
-    --foreground: 222 30% 16%;
+    --foreground: 222 22% 18%;
 
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
@@ -17,34 +17,34 @@
     --popover-foreground: 222 47% 11%;
 
     /* Primary - Azul Médico */
-    --primary: 214 58% 36%;
+    --primary: 210 100% 40%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Azul Claro */
-    --secondary: 210 30% 94%;
-    --secondary-foreground: 214 45% 28%;
+    /* Secondary - Turquesa */
+    --secondary: 174 45% 92%;
+    --secondary-foreground: 174 35% 24%;
 
     /* Muted - Cinza Suave */
     --muted: 210 24% 94%;
     --muted-foreground: 220 10% 45%;
 
-    /* Accent - Azul Intermediário */
+    /* Accent - Neutro */
     --accent: 210 30% 94%;
-    --accent-foreground: 214 45% 28%;
+    --accent-foreground: 222 22% 18%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 214 18% 88%;
     --input: 214 18% 88%;
-    --ring: 214 58% 36%;
+    --ring: 210 100% 40%;
 
     --radius: 0.6rem;
 
     /* Sidebar */
     --sidebar-background: 0 0% 99%;
     --sidebar-foreground: 220 12% 32%;
-    --sidebar-primary: 214 58% 36%;
+    --sidebar-primary: 210 100% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 210 30% 94%;
     --sidebar-accent-foreground: 214 45% 28%;
@@ -52,9 +52,9 @@
     --sidebar-ring: 214 58% 36%;
 
     /* Custom OrthoCode tokens */
-    --medical-blue: 214 58% 36%;
+    --medical-blue: 210 100% 40%;
     --medical-blue-light: 210 30% 94%;
-    --medical-blue-dark: 214 58% 26%;
+    --medical-blue-dark: 210 100% 32%;
     --success: 142 76% 36%;
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
@@ -62,46 +62,46 @@
   }
 
   .dark {
-    --background: 222 26% 12%;
+    --background: 0 0% 7%;
     --foreground: 210 20% 96%;
 
-    --card: 222 24% 16%;
+    --card: 0 0% 12%;
     --card-foreground: 210 20% 96%;
 
-    --popover: 222 24% 16%;
+    --popover: 0 0% 12%;
     --popover-foreground: 210 20% 96%;
 
-    --primary: 214 70% 64%;
-    --primary-foreground: 222 26% 12%;
+    --primary: 210 100% 60%;
+    --primary-foreground: 0 0% 10%;
 
-    --secondary: 222 20% 20%;
-    --secondary-foreground: 210 20% 96%;
+    --secondary: 174 30% 22%;
+    --secondary-foreground: 174 60% 85%;
 
-    --muted: 222 20% 20%;
+    --muted: 0 0% 14%;
     --muted-foreground: 214 12% 68%;
 
-    --accent: 222 20% 20%;
+    --accent: 0 0% 14%;
     --accent-foreground: 210 20% 96%;
 
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 222 18% 24%;
-    --input: 222 18% 24%;
-    --ring: 214 70% 64%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 210 100% 60%;
 
-    --sidebar-background: 222 26% 10%;
+    --sidebar-background: 0 0% 9%;
     --sidebar-foreground: 210 20% 96%;
-    --sidebar-primary: 214 70% 64%;
-    --sidebar-primary-foreground: 222 26% 12%;
-    --sidebar-accent: 222 20% 20%;
+    --sidebar-primary: 210 100% 60%;
+    --sidebar-primary-foreground: 0 0% 10%;
+    --sidebar-accent: 0 0% 14%;
     --sidebar-accent-foreground: 210 20% 96%;
-    --sidebar-border: 222 18% 24%;
-    --sidebar-ring: 214 70% 64%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 210 100% 60%;
 
-    --medical-blue: 214 70% 64%;
-    --medical-blue-light: 222 20% 24%;
-    --medical-blue-dark: 214 70% 48%;
+    --medical-blue: 210 100% 60%;
+    --medical-blue-light: 0 0% 14%;
+    --medical-blue-dark: 210 100% 48%;
     --success: 142 76% 45%;
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 60%;

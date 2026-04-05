@@ -17,6 +17,8 @@ export function SearchBar({ onSearch, onSelectProcedure, placeholder = 'Buscar p
   const [suggestions, setSuggestions] = useState<Procedure[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [procedures, setProcedures] = useState<Procedure[]>([]);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const debouncedQuery = useDebounce(query, 200);
@@ -26,6 +28,20 @@ export function SearchBar({ onSearch, onSelectProcedure, placeholder = 'Buscar p
       console.error('Error loading procedures in SearchBar:', err);
       setProcedures([]);
     });
+  }, []);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('tuss-recent-searches');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setRecentSearches(parsed);
+        }
+      } catch {
+        setRecentSearches([]);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -52,6 +68,11 @@ export function SearchBar({ onSearch, onSelectProcedure, placeholder = 'Buscar p
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (query.trim().length >= 2) {
+      const next = [query.trim(), ...recentSearches.filter((item) => item !== query.trim())].slice(0, 6);
+      setRecentSearches(next);
+      localStorage.setItem('tuss-recent-searches', JSON.stringify(next));
+    }
     onSearch(query);
     setShowSuggestions(false);
   };
@@ -82,6 +103,8 @@ export function SearchBar({ onSearch, onSelectProcedure, placeholder = 'Buscar p
             autoComplete="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
             placeholder={placeholder}
             className="pl-12 pr-12 h-12 text-base rounded-lg border border-border focus:border-primary bg-background shadow-sm"
           />
@@ -100,7 +123,7 @@ export function SearchBar({ onSearch, onSelectProcedure, placeholder = 'Buscar p
       </form>
 
       {/* Suggestions Dropdown */}
-      {showSuggestions && suggestions.length > 0 && (
+      {(showSuggestions && suggestions.length > 0) && (
         <div className="absolute z-50 w-full mt-2 bg-card border border-border rounded-lg shadow-md overflow-hidden animate-fade-in">
           {suggestions.map((procedure) => (
             <button
@@ -119,6 +142,28 @@ export function SearchBar({ onSearch, onSelectProcedure, placeholder = 'Buscar p
                   {procedure.type === 'cirurgico' ? 'Cirúrgico' : procedure.type === 'ambulatorial' ? 'Ambulatorial' : 'Diagnóstico'}
                 </span>
               </div>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {isFocused && query.trim().length < 2 && recentSearches.length > 0 && (
+        <div className="absolute z-40 w-full mt-2 bg-card border border-border rounded-lg shadow-md overflow-hidden animate-fade-in">
+          <div className="px-4 py-2 text-xs text-muted-foreground border-b border-border">
+            Buscas recentes
+          </div>
+          {recentSearches.map((term) => (
+            <button
+              key={term}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => {
+                setQuery(term);
+                onSearch(term);
+                setShowSuggestions(false);
+              }}
+              className="w-full px-4 py-2 text-left text-sm hover:bg-accent transition-colors border-b border-border last:border-b-0"
+            >
+              {term}
             </button>
           ))}
         </div>

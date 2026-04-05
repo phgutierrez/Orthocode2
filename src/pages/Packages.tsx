@@ -14,6 +14,8 @@ import { usePackageSharing } from '@/hooks/usePackageSharing';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/components/ui/use-toast';
 import { PageShell } from '@/components/PageShell';
+import { SidebarNav } from '@/components/SidebarNav';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { PrivatePackage, OpmeItem } from '@/types/package';
 import { NotificationsModal } from './packages/NotificationsModal';
 import { PackageDetailModal } from './packages/PackageDetailModal';
@@ -466,7 +468,7 @@ export default function Packages() {
     <>
       <PageShell
         header={
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between max-w-5xl">
             <div className="flex items-center gap-3 sm:gap-4">
               <div className="p-2.5 sm:p-3 bg-primary/10 rounded-xl">
                 <Package className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
@@ -494,8 +496,30 @@ export default function Packages() {
           </div>
         }
         headerClassName="bg-muted/30 sticky top-0 z-10"
-        containerClassName="max-w-5xl"
+        containerClassName="max-w-6xl"
         mainClassName="pb-24"
+        sidebar={<SidebarNav />}
+        context={
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-muted-foreground">Resumo</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Pacotes</span>
+                <span className="font-medium">{packages.length}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Particulares</span>
+                <span className="font-medium">{privatePackages.length}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">OPMEs</span>
+                <span className="font-medium">{opmes.length}</span>
+              </div>
+            </CardContent>
+          </Card>
+        }
       >
         <Tabs
           value={primaryTab}

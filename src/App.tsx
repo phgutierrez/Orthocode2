@@ -7,7 +7,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import ProcedureDetail from "./pages/ProcedureDetail";
 import Favorites from "./pages/Favorites";
-import About from "./pages/About";
+import Profile from "./pages/Profile";
 import Packages from "./pages/Packages";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -93,7 +93,15 @@ const App = () => (
               path="/about"
               element={
                 <ProtectedRoute>
-                  <About />
+                  <Navigate to="/profile" replace />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
                 </ProtectedRoute>
               }
             />

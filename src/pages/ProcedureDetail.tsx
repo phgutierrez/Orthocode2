@@ -2,10 +2,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, Copy, Clock, Syringe, FileText, Check } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BottomNav } from '@/components/BottomNav';
 import { PageShell } from '@/components/PageShell';
+import { SidebarNav } from '@/components/SidebarNav';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getProcedureById } from '@/data/procedures';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useProcedures } from '@/hooks/useProcedures';
@@ -41,13 +42,6 @@ export default function ProcedureDetail() {
       </div>
     );
   }
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value);
-  };
 
   const handleCopy = async (text: string, fieldName: string) => {
     try {
@@ -91,7 +85,7 @@ ${procedure.description}
     <>
       <PageShell
         header={
-          <div className="space-y-4">
+          <div className="space-y-4 max-w-2xl">
             <div className="flex items-center justify-between">
               <Button
                 variant="ghost"
@@ -137,10 +131,26 @@ ${procedure.description}
           </div>
         }
         headerClassName="bg-muted/30"
-        containerClassName="max-w-2xl"
+        containerClassName="max-w-6xl"
         mainClassName="pb-24"
+        sidebar={<SidebarNav />}
+        context={
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-muted-foreground">Acoes</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              <Button variant="outline" className="w-full" onClick={handleCopyAll}>
+                Copiar detalhes
+              </Button>
+              <Button variant="outline" className="w-full" onClick={() => toggleFavorite(procedure.id)}>
+                {favorite ? "Remover favorito" : "Salvar favorito"}
+              </Button>
+            </CardContent>
+          </Card>
+        }
       >
-        <div className="space-y-4">
+        <div className="space-y-4 max-w-2xl">
           {/* Codes Card */}
           <Card className="animate-slide-up">
             <CardHeader className="pb-2">
