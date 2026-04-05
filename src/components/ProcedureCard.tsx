@@ -28,7 +28,7 @@ export const ProcedureCard = memo(function ProcedureCard({ procedure, isFavorite
 
   return (
     <Card 
-      className="cursor-pointer card-hover liquid-glass animate-scale-in border-0"
+      className="cursor-pointer card-hover bg-card border border-border/70 shadow-sm animate-scale-in"
       onClick={onClick}
     >
       <CardContent className="p-4">

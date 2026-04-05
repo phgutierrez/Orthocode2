@@ -19,8 +19,8 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-gray-600">Carregando...</div>
+      <div className="min-h-screen bg-muted/30 flex items-center justify-center">
+        <div className="text-muted-foreground">Carregando...</div>
       </div>
     );
   }
@@ -37,8 +37,8 @@ function HomeRoute() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-gray-600">Carregando...</div>
+      <div className="min-h-screen bg-muted/30 flex items-center justify-center">
+        <div className="text-muted-foreground">Carregando...</div>
       </div>
     );
   }

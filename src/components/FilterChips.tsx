@@ -27,14 +27,14 @@ export function FilterChips({ selectedRegion, selectedType, onRegionChange, onTy
     <div className="space-y-3">
       {/* Type filters */}
       <div className="flex flex-wrap gap-2">
-        <span className="text-xs text-muted-foreground mr-1 self-center">Tipo:</span>
+        <span className="text-xs text-muted-foreground mr-1 self-center">Tipo</span>
         {types.map((type) => (
           <Badge
             key={type}
             variant={selectedType === type ? 'default' : 'outline'}
             className={cn(
-              "cursor-pointer transition-all hover:bg-primary/10",
-              selectedType === type && "bg-primary text-primary-foreground"
+              "cursor-pointer transition-colors hover:bg-muted/70",
+              selectedType === type && "bg-primary text-primary-foreground border-primary"
             )}
             onClick={() => onTypeChange(selectedType === type ? undefined : type)}
           >
@@ -45,14 +45,14 @@ export function FilterChips({ selectedRegion, selectedType, onRegionChange, onTy
 
       {/* Region filters */}
       <div className="flex flex-wrap gap-2">
-        <span className="text-xs text-muted-foreground mr-1 self-center">Região:</span>
+        <span className="text-xs text-muted-foreground mr-1 self-center">Região</span>
         {regions.map((region) => (
           <Badge
             key={region}
             variant={selectedRegion === region ? 'default' : 'outline'}
             className={cn(
-              "cursor-pointer transition-all hover:bg-primary/10",
-              selectedRegion === region && "bg-primary text-primary-foreground"
+              "cursor-pointer transition-colors hover:bg-muted/70",
+              selectedRegion === region && "bg-primary text-primary-foreground border-primary"
             )}
             onClick={() => onRegionChange(selectedRegion === region ? undefined : region)}
           >

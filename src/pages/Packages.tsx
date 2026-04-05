@@ -13,6 +13,7 @@ import { useNotifications, type Notification } from '@/hooks/useNotifications';
 import { usePackageSharing } from '@/hooks/usePackageSharing';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/components/ui/use-toast';
+import { PageShell } from '@/components/PageShell';
 import type { PrivatePackage, OpmeItem } from '@/types/package';
 import { NotificationsModal } from './packages/NotificationsModal';
 import { PackageDetailModal } from './packages/PackageDetailModal';
@@ -462,81 +463,78 @@ export default function Packages() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      {/* Modern Header with Gradient */}
-      <header className="border-b border-border safe-area-top sticky top-0 z-10 bg-background/80 backdrop-blur-lg">
-        <div className="medical-gradient-radial">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="p-2.5 sm:p-3 bg-primary/10 rounded-xl">
-                  <Package className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
-                </div>
-                <div className="min-w-0">
-                  <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Pacotes</h1>
-                  <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 hidden sm:block">
-                    Agrupe códigos TUSS em pacotes reutilizáveis
-                  </p>
-                </div>
+    <>
+      <PageShell
+        header={
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="p-2.5 sm:p-3 bg-primary/10 rounded-xl">
+                <Package className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative h-11 w-11 rounded-full hover:bg-primary/10 transition-colors"
-                onClick={() => setShowNotifications(!showNotifications)}
-              >
-                <Bell className="h-5 w-5" />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 h-5 w-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center font-semibold shadow-lg animate-scale-in">
-                    {unreadCount}
-                  </span>
-                )}
-              </Button>
+              <div className="min-w-0">
+                <h1 className="text-2xl sm:text-3xl font-semibold text-foreground">Pacotes</h1>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 hidden sm:block">
+                  Agrupe códigos TUSS em pacotes reutilizáveis
+                </p>
+              </div>
             </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative h-11 w-11 rounded-full hover:bg-muted transition-colors"
+              onClick={() => setShowNotifications(!showNotifications)}
+            >
+              <Bell className="h-5 w-5" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 h-5 w-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center font-semibold shadow-sm animate-scale-in">
+                  {unreadCount}
+                </span>
+              )}
+            </Button>
           </div>
-        </div>
-      </header>
-
-      <main className="px-4 sm:px-6 py-6 sm:py-8">
-        <div className="max-w-5xl mx-auto">
-          <Tabs
-            value={primaryTab}
-            onValueChange={(value) => setPrimaryTab(value as 'standard' | 'private' | 'opme')}
-            className="w-full"
-          >
-            <TabsList className="grid w-full grid-cols-3 mb-6 sm:mb-8 h-11 p-1 bg-muted/50 rounded-xl">
-              <TabsTrigger
-                value="standard"
-                className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium text-sm sm:text-base"
-              >
-                Pacotes
-              </TabsTrigger>
-              <TabsTrigger
-                value="private"
-                className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium text-sm sm:text-base"
-              >
-                Particular
-              </TabsTrigger>
-              <TabsTrigger
-                value="opme"
-                className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium text-sm sm:text-base"
-              >
-                OPME
-              </TabsTrigger>
-            </TabsList>
+        }
+        headerClassName="bg-muted/30 sticky top-0 z-10"
+        containerClassName="max-w-5xl"
+        mainClassName="pb-24"
+      >
+        <Tabs
+          value={primaryTab}
+          onValueChange={(value) => setPrimaryTab(value as 'standard' | 'private' | 'opme')}
+          className="w-full"
+        >
+          <TabsList className="grid w-full grid-cols-3 mb-6 sm:mb-8 h-11 p-1 bg-muted/50 rounded-lg">
+            <TabsTrigger
+              value="standard"
+              className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium text-sm sm:text-base"
+            >
+              Pacotes
+            </TabsTrigger>
+            <TabsTrigger
+              value="private"
+              className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium text-sm sm:text-base"
+            >
+              Particular
+            </TabsTrigger>
+            <TabsTrigger
+              value="opme"
+              className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium text-sm sm:text-base"
+            >
+              OPME
+            </TabsTrigger>
+          </TabsList>
 
             <TabsContent value="standard" className="animate-fade-in">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-6 h-11 p-1 bg-muted/50 rounded-xl">
+                <TabsList className="grid w-full grid-cols-2 mb-6 h-11 p-1 bg-muted/50 rounded-lg">
                   <TabsTrigger
                     value="list"
-                    className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium text-sm sm:text-base"
+                    className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium text-sm sm:text-base"
                   >
                     Meus Pacotes
                   </TabsTrigger>
                   <TabsTrigger
                     value="create"
-                    className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium text-sm sm:text-base"
+                    className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium text-sm sm:text-base"
                   >
                     {editingPackage ? 'Editar' : 'Criar Novo'}
                   </TabsTrigger>
@@ -573,16 +571,16 @@ export default function Packages() {
 
             <TabsContent value="private" className="animate-fade-in">
               <Tabs value={privateActiveTab} onValueChange={setPrivateActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-6 h-11 p-1 bg-muted/50 rounded-xl">
+                <TabsList className="grid w-full grid-cols-2 mb-6 h-11 p-1 bg-muted/50 rounded-lg">
                   <TabsTrigger
                     value="list"
-                    className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium text-sm sm:text-base"
+                    className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium text-sm sm:text-base"
                   >
                     Particulares
                   </TabsTrigger>
                   <TabsTrigger
                     value="create"
-                    className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium text-sm sm:text-base"
+                    className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium text-sm sm:text-base"
                   >
                     {editingPrivatePackage ? 'Editar' : 'Criar Particular'}
                   </TabsTrigger>
@@ -637,8 +635,7 @@ export default function Packages() {
               />
             </TabsContent>
           </Tabs>
-        </div>
-      </main>
+      </PageShell>
 
       <BottomNav />
 

@@ -26,16 +26,16 @@ export function Logo({ size = 'md', showText = true }: LogoProps) {
 
   return (
     <div className="flex items-center gap-3">
-      <div className={`${sizeClasses[size]} medical-gradient rounded-xl flex items-center justify-center shadow-lg`}>
+      <div className={`${sizeClasses[size]} medical-gradient rounded-xl flex items-center justify-center shadow-sm`}>
         <Bone className="text-primary-foreground" size={iconSizes[size]} />
       </div>
       {showText && (
         <div className="flex flex-col">
-          <span className={`${textClasses[size]} font-bold text-white leading-tight`}>
+          <span className={`${textClasses[size]} font-semibold text-foreground leading-tight`}>
             Pacote TUSS
           </span>
           {size !== 'sm' && (
-            <span className="text-xs text-white/80">
+            <span className="text-xs text-muted-foreground">
               Gerenciador de Procedimentos
             </span>
           )}

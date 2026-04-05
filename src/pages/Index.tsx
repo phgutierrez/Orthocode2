@@ -6,6 +6,7 @@ import { SearchBar } from '@/components/SearchBar';
 import { ProcedureCard } from '@/components/ProcedureCard';
 import { FilterChips } from '@/components/FilterChips';
 import { BottomNav } from '@/components/BottomNav';
+import { PageShell } from '@/components/PageShell';
 import { Button } from '@/components/ui/button';
 import { searchProcedures } from '@/data/procedures';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -68,27 +69,26 @@ export default function Index() {
   const showResults = searchQuery || selectedRegion || selectedType;
 
   return (
-    <div className="min-h-screen medical-gradient-radial pb-20 smooth-scroll">
-      {/* Header */}
-      <header className="medical-gradient pt-8 pb-12 px-4 safe-area-top animate-fade-in">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex items-center justify-center mb-8">
-            <Logo size="lg" />
+    <>
+      <PageShell
+        header={
+          <div className="space-y-6 text-center">
+            <div className="flex items-center justify-center">
+              <Logo size="lg" />
+            </div>
+            <SearchBar
+              onSearch={handleSearch}
+              onSelectProcedure={handleSelectProcedure}
+            />
           </div>
-          
-          <SearchBar 
-            onSearch={handleSearch}
-            onSelectProcedure={handleSelectProcedure}
-          />
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="px-4 -mt-4">
-        <div className="max-w-2xl mx-auto space-y-6">
-          
+        }
+        headerClassName="bg-muted/30"
+        containerClassName="max-w-2xl"
+        mainClassName="pt-6 pb-24"
+      >
+        <div className="space-y-6">
           {/* Filters */}
-          <div className="liquid-glass rounded-2xl p-4 animate-slide-up">
+          <div className="rounded-xl border border-border/70 bg-card p-4">
             <FilterChips
               selectedRegion={selectedRegion}
               selectedType={selectedType}
@@ -132,7 +132,7 @@ export default function Index() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
+                <div className="text-center py-10">
                   <p className="text-muted-foreground">
                     Nenhum procedimento encontrado para sua busca.
                   </p>
@@ -192,9 +192,9 @@ export default function Index() {
             </div>
           )}
         </div>
-      </main>
+      </PageShell>
 
       <BottomNav />
-    </div>
+    </>
   );
 }

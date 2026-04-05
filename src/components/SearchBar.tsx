@@ -83,7 +83,7 @@ export function SearchBar({ onSearch, onSelectProcedure, placeholder = 'Buscar p
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={placeholder}
-            className="pl-12 pr-12 h-14 text-base rounded-xl border-2 border-border focus:border-primary bg-card shadow-sm"
+            className="pl-12 pr-12 h-12 text-base rounded-lg border border-border focus:border-primary bg-background shadow-sm"
           />
           {query && (
             <Button
@@ -101,7 +101,7 @@ export function SearchBar({ onSearch, onSelectProcedure, placeholder = 'Buscar p
 
       {/* Suggestions Dropdown */}
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute z-50 w-full mt-2 bg-card border border-border rounded-xl shadow-lg overflow-hidden animate-fade-in">
+        <div className="absolute z-50 w-full mt-2 bg-card border border-border rounded-lg shadow-md overflow-hidden animate-fade-in">
           {suggestions.map((procedure) => (
             <button
               key={procedure.id}

@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PageShell } from '@/components/PageShell';
 import { useAuth } from '@/contexts/AuthContext';
 import { AlertCircle } from 'lucide-react';
 
@@ -66,8 +67,12 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+    <PageShell
+      className="bg-muted/30"
+      containerClassName="max-w-md"
+      mainClassName="min-h-[calc(100vh-2rem)] flex items-center justify-center py-10"
+    >
+      <Card className="w-full border-border/70 shadow-sm">
         <Tabs defaultValue="login" className="w-full">
           <TabsList className="grid w-full grid-cols-2 rounded-none border-b">
             <TabsTrigger value="login">Login</TabsTrigger>
@@ -76,8 +81,8 @@ export default function Auth() {
 
           {/* LOGIN */}
           <TabsContent value="login" className="p-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Bem-vindo</h2>
-            <p className="text-gray-600 text-sm mb-6">Entre com suas credenciais</p>
+            <h2 className="text-2xl font-semibold text-foreground mb-2">Bem-vindo</h2>
+            <p className="text-muted-foreground text-sm mb-6">Entre com suas credenciais</p>
 
             {error && (
               <Alert variant="destructive" className="mb-4">
@@ -88,7 +93,7 @@ export default function Auth() {
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label htmlFor="login-email" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="login-email" className="block text-sm font-medium text-foreground mb-1">
                   Email
                 </label>
                 <Input
@@ -105,7 +110,7 @@ export default function Auth() {
               </div>
 
               <div>
-                <label htmlFor="login-password" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="login-password" className="block text-sm font-medium text-foreground mb-1">
                   Senha
                 </label>
                 <Input
@@ -121,24 +126,20 @@ export default function Auth() {
                 />
               </div>
 
-              <Button
-                type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
-                disabled={loading}
-              >
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Carregando...' : 'Entrar'}
               </Button>
             </form>
 
-            <p className="text-center text-sm text-gray-600 mt-4">
+            <p className="text-center text-sm text-muted-foreground mt-4">
               Não tem conta? Use a aba "Cadastro" para se registrar
             </p>
           </TabsContent>
 
           {/* SIGNUP */}
           <TabsContent value="signup" className="p-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Cadastrar</h2>
-            <p className="text-gray-600 text-sm mb-6">Crie sua conta para acessar</p>
+            <h2 className="text-2xl font-semibold text-foreground mb-2">Cadastrar</h2>
+            <p className="text-muted-foreground text-sm mb-6">Crie sua conta para acessar</p>
 
             {error && (
               <Alert variant="destructive" className="mb-4">
@@ -149,7 +150,7 @@ export default function Auth() {
 
             <form onSubmit={handleSignup} className="space-y-4">
               <div>
-                <label htmlFor="signup-name" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="signup-name" className="block text-sm font-medium text-foreground mb-1">
                   Nome Completo
                 </label>
                 <Input
@@ -166,7 +167,7 @@ export default function Auth() {
               </div>
 
               <div>
-                <label htmlFor="signup-email" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="signup-email" className="block text-sm font-medium text-foreground mb-1">
                   Email
                 </label>
                 <Input
@@ -183,7 +184,7 @@ export default function Auth() {
               </div>
 
               <div>
-                <label htmlFor="signup-password" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="signup-password" className="block text-sm font-medium text-foreground mb-1">
                   Senha
                 </label>
                 <Input
@@ -197,13 +198,13 @@ export default function Auth() {
                   disabled={loading}
                   autoComplete="new-password"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   Mín. 6 caracteres, com letras e números
                 </p>
               </div>
 
               <div>
-                <label htmlFor="signup-password-confirm" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="signup-password-confirm" className="block text-sm font-medium text-foreground mb-1">
                   Confirmar Senha
                 </label>
                 <Input
@@ -219,21 +220,17 @@ export default function Auth() {
                 />
               </div>
 
-              <Button
-                type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
-                disabled={loading}
-              >
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Carregando...' : 'Cadastrar'}
               </Button>
             </form>
 
-            <p className="text-center text-sm text-gray-600 mt-4">
+            <p className="text-center text-sm text-muted-foreground mt-4">
               Já tem conta? Use a aba "Login" para entrar
             </p>
           </TabsContent>
         </Tabs>
       </Card>
-    </div>
+    </PageShell>
   );
 }

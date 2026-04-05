@@ -1,5 +1,6 @@
 import { Logo } from '@/components/Logo';
 import { BottomNav } from '@/components/BottomNav';
+import { PageShell } from '@/components/PageShell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Search, Heart, Smartphone, Shield, Package, GripVertical, Layers, Zap } from 'lucide-react';
@@ -49,34 +50,36 @@ export default function About() {
   ];
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      {/* Header */}
-      <header className="medical-gradient pt-8 pb-12 px-4 safe-area-top">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="flex justify-center mb-6">
-            <Logo size="lg" />
+    <>
+      <PageShell
+        header={
+          <div className="text-center space-y-3">
+            <div className="flex justify-center">
+              <Logo size="lg" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-semibold text-foreground">Pacotes TUSS</h1>
+              <p className="text-muted-foreground text-base">
+                Gerenciador completo de códigos TUSS com filtros, favoritos e pacotes personalizados
+              </p>
+            </div>
+            <Badge className="bg-primary/10 text-primary border border-primary/20">
+              Versão 2.0
+            </Badge>
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">Pacotes TUSS</h1>
-          <p className="text-white/90 text-lg">
-            Gerenciador completo de códigos TUSS com filtros, favoritos e pacotes personalizados
-          </p>
-          <Badge className="mt-4 bg-white/20 text-white border-0">
-            Versão 2.0
-          </Badge>
-        </div>
-      </header>
-
-      {/* Content */}
-      <main className="px-4 -mt-4">
-        <div className="max-w-2xl mx-auto space-y-6">
-
+        }
+        headerClassName="bg-muted/30"
+        containerClassName="max-w-2xl"
+        mainClassName="pb-24"
+      >
+        <div className="space-y-6">
           {/* Features */}
           <div className="grid gap-4">
             {features.map(({ icon: Icon, title, description }) => (
-              <Card key={title} className="animate-fade-in">
+              <Card key={title} className="animate-fade-in border-border/70">
                 <CardContent className="p-4 flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                    <Icon className="h-6 w-6 text-primary" />
+                  <div className="w-11 h-11 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <Icon className="h-5 w-5 text-primary" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">{title}</h3>
@@ -151,11 +154,10 @@ export default function About() {
               </p>
             </CardContent>
           </Card>
-
         </div>
-      </main>
+      </PageShell>
 
       <BottomNav />
-    </div>
+    </>
   );
 }

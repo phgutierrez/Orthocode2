@@ -98,7 +98,7 @@ function PackageCard({
     return (
         <div ref={setNodeRef} style={style} className={isSortableDragging ? 'dragging-card' : ''}>
             <Card
-                className={`card-hover cursor-pointer group hover:border-primary/50 hover:shadow-lg transition-all duration-300 ${isDragging ? 'drag-overlay-card' : ''}`}
+                className={`card-hover cursor-pointer group border border-border/70 bg-card shadow-sm hover:shadow-md transition-all duration-300 ${isDragging ? 'drag-overlay-card' : ''}`}
                 onClick={() => {
                     triggerLight();
                     onView(pkg.id);
