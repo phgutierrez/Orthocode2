@@ -671,6 +671,6 @@ export default function Packages() {
         }}
         onClose={() => setViewingPrivatePackageId(null)}
       />
-    </div>
+    </>
   );
 }
