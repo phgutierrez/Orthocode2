@@ -105,8 +105,8 @@ function PrivatePackageCard({
                     {/* Header */}
                     <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
-                            <h3 className="text-lg font-semibold text-foreground truncate group-hover:text-primary transition-colors">
-                                {pkg.name}
+                            <h3 className="text-lg font-semibold text-card-foreground line-clamp-2 break-words group-hover:text-primary transition-colors">
+                                {pkg.name || "Pacote sem nome"}
                             </h3>
                             {pkg.description && (
                                 <p className="text-sm text-muted-foreground line-clamp-2 mt-1.5">
